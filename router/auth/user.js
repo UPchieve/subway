@@ -1,6 +1,4 @@
 var bcrypt = require('bcrypt');
-// var nodemailer = require('nodemailer');
-const saltRounds = 10;
 
 var passport = require('passport');
 
@@ -49,7 +47,7 @@ module.exports = function(router){
       var user = new User();
       user.email = email;
 
-      bcrypt.genSalt(saltRounds, function(err, salt){
+      bcrypt.genSalt(config.saltRounds, function(err, salt){
         bcrypt.hash(password, salt, function(err, hash){
           user.password = hash; // Note the salt is embedded in the final hash
 
