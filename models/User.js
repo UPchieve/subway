@@ -1,9 +1,9 @@
 var mongoose = require('mongoose');
+var bcrypt = require('bcrypt');
 
 var userSchema = new mongoose.Schema({
   email: { type: String, unique: true, lowercase: true },
-
-  profileId: String,
+  password: String,
 
   name: {
     type: String,
@@ -24,6 +24,20 @@ var userSchema = new mongoose.Schema({
 
 });
 
+
+
+userSchema.methods.verifyPassword = function(candidatePassword, cb){
+  var user = this;
+
+  bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
+    if (err){
+      return cb(err);
+    } else if (isMatch){
+      return cb(null, user);
+    } else {
+      cb(null, false);
+    }
+  });
 };
 
 module.exports = mongoose.model('User', userSchema);

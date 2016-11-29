@@ -31,7 +31,9 @@ app.use(busboy());
 
 var server = http.createServer(app);
 
-server.listen(app.get('port'));
+var port = app.get('port');
+server.listen(port);
+console.log('Listening on port ' + port);
 
 // Load server router
 require('./router')(app);
