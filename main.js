@@ -6,6 +6,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var busboy = require('connect-busboy');
+var cors = require('cors');
 var mongoose = require('mongoose');
 
 // Configuration
@@ -28,6 +29,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(busboy());
+app.use(cors());
 
 var server = http.createServer(app);
 
