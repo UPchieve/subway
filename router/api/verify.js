@@ -2,9 +2,18 @@ var VerificationCtrl = require('../../controllers/VerificationCtrl');
 
 module.exports = function(router){
 	router.post('/verify/send', function(req, res){
+		var email = req.body.email,
+				userId = req.user && req.user._id;
+
+		if (!email){
+			return res.json({err: 'Must supply an email address to verify'});
+		} else if (!userId){
+			return res.json({err: 'Must be authenticated to send verification email'});
+		}
+
 		VerificationCtrl.initiateVerification({
-			userId: req.user._id,
-			email: req.body.email,
+			userId: userId,
+			email: email,
 		}, function(err, email){
 			if (err){
 				res.json({err: err});

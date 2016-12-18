@@ -18,6 +18,8 @@ module.exports = {
           }
           if (!user) {
             return done(new Error('No account with that id found.'));
+          } else if (user.verified){
+            return done(new Error('User is already verified'));
           }
           done(null, user);
         });
@@ -53,13 +55,8 @@ module.exports = {
         User.findOne({verificationToken: token}, function(err, user){
           if (!user){
             return done(new Error('No user found with that verification token'));
-          }
-          if (err){
-            if (err.code === 11000){
-              return done(new Error('A user with that email already exists'));
-            } else {
-              return done(err);
-            }
+          } else if (err){
+            return done(err);
           }
           done(null, user);
         });
