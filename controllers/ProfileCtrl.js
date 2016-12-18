@@ -18,10 +18,7 @@ module.exports = {
         // fieldName = data.fieldName
 
     User.findByIdAndUpdate(userId, {
-      biography: biography,
-      tagline: tagline,
-      location: location,
-      coordinates: coordinates
+      // fieldName: fieldName
     }, { new: true }, function(err, user){
       if (err){
         return callback(err);
