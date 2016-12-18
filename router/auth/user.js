@@ -5,6 +5,8 @@ var passport = require('passport');
 var config = require('../../config/server.js');
 var User = require('../../models/User.js');
 
+var VerificationCtrl = require('../../controllers/VerificationCtrl');
+
 module.exports = function(router){
     router.route('/user')
         .get(function(req, res){
@@ -57,9 +59,17 @@ module.exports = function(router){
                 err: err
               });
             } else {
-              res.json({
-                msg: 'Registration successful'
-              });
+              VerificationCtrl.initiateVerification({
+          			userId: user._id,
+          			email: user.email
+          		}, function(err, email){
+          			if (err){
+          				res.json({err: err});
+                  res.json({msg: 'Registration successful. Error sending verification email: ' + err});
+          			} else {
+          				res.json({msg: 'Registration successful. Verification email sent to ' + email});
+          			}
+          		});
             }
           })
         })

@@ -5,6 +5,12 @@ var userSchema = new mongoose.Schema({
   email: { type: String, unique: true, lowercase: true },
   password: String,
 
+  verified: {
+    type: Boolean,
+    default: false
+  },
+  verificationToken: String,
+
   name: {
     type: String,
     default: ''
@@ -17,6 +23,7 @@ var userSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+
   createdAt: {
     type: Date,
     default: Date.now
@@ -24,7 +31,17 @@ var userSchema = new mongoose.Schema({
 
 });
 
+userSchema.methods.parseProfile = function(){
+  return {
+    _id: this._id,
+    email: this.email,
+    verified: this.verified
+  };
+};
 
+userSchema.methods.getProfile = function(cb){
+  cb(null, this.parseProfile());
+};
 
 userSchema.methods.verifyPassword = function(candidatePassword, cb){
   var user = this;
