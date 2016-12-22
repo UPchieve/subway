@@ -15,10 +15,10 @@ module.exports = {
     var userId = options.userId;
 
     var data = options.data || {};
-        // fieldName = data.fieldName
+        picture = data.picture;
 
     User.findByIdAndUpdate(userId, {
-      // fieldName: fieldName
+      picture: picture
     }, { new: true }, function(err, user){
       if (err){
         return callback(err);

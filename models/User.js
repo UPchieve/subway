@@ -31,14 +31,19 @@ var userSchema = new mongoose.Schema({
 
 });
 
+// Given a user record, strip out sensitive data for public consumption
 userSchema.methods.parseProfile = function(){
   return {
     _id: this._id,
     email: this.email,
-    verified: this.verified
+    verified: this.verified,
+    picture: this.picture,
+    isTutor: this.isTutor,
+    createdAt: this.createdAt
   };
 };
 
+// Placeholder method to support asynchronous profile parsing
 userSchema.methods.getProfile = function(cb){
   cb(null, this.parseProfile());
 };

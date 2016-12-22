@@ -1,4 +1,5 @@
 var express = require('express');
+var passport = require('../auth/passport');
 
 module.exports = function(app){
 	console.log('API module');
@@ -8,5 +9,5 @@ module.exports = function(app){
 	require('./user')(router);
 	require('./verify')(router);
 
-	app.use('/api', router);
+	app.use('/api', passport.isAuthenticated, router);
 };

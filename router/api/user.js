@@ -1,13 +1,26 @@
-var ProfileCtrl = require('../../controllers/ProfileCtrl');
+var UserCtrl = require('../../controllers/UserCtrl');
 
 module.exports = function(router){
-	router.put('/user', function(){
+	router.route('/user')
+		.get(function(req, res){
+				if (req.user){
+						res.json({
+								user: req.user
+						});
+				} else {
+						res.json({
+								err: 'Client has no authenticated session'
+						});
+				}
+		});
+
+	router.put('/user', function(req, res){
 		var data = req.body || {};
-		// Update coords
-		ProfileCtrl.update({
+
+		UserCtrl.update({
 			userId: req.user._id,
 			data: {
-				// fieldName: data.fieldName
+				picture: data.picture
 			}
 		}, function(err, user){
 			if (err){
@@ -21,7 +34,7 @@ module.exports = function(router){
 	});
 
 	router.get('/user/:id', function(req, res){
-		ProfileCtrl.get({
+		UserCtrl.get({
 			userId: req.params.id
 		}, function(err, profile){
 			if (err){

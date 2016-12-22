@@ -1,7 +1,7 @@
 var async = require('async');
 var crypto = require('crypto');
 
-var MailCtrl = require('./MailCtrl');
+var MailService = require('../services/MailService');
 
 var User = require('../models/User');
 
@@ -37,7 +37,7 @@ module.exports = {
         });
       },
       function(token, email, done){
-        MailCtrl.sendVerification({
+        MailService.sendVerification({
           email: email,
           token: token
         }, function(err){
