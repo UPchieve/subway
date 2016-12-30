@@ -6,7 +6,7 @@ module.exports = {
 	sessionSecret: process.env.SESSION_SECRET || 'PoKtSuRS2phoslZRV9XEVS9hVyMTzSyB',
 	saltRounds: 10,
 	mail: {
-		auth: '',
+		auth: 'smtps://believeachieve.noreply:]N8tepDZdovXgMdw*9W8@smtp.gmail.com',
 		senders: {
 			noreply: 'noreply@believeachieve.com'
 		}

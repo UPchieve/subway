@@ -1,9 +1,6 @@
 var config = require('../config/server');
 
-var transporter = require('nodemailer').createTransport({
-  service: 'Gmail',
-  auth: config.mail.auth
-});
+var transporter = require('nodemailer').createTransport(config.mail.auth);
 
 module.exports = {
   sendVerification: function(options, callback){

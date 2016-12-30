@@ -7,10 +7,11 @@ var User = require('../models/User');
 
 module.exports = {
   initiateVerification: function(options, callback){
-    var userId = options.userId,
-        email = options.email;
+    var userId = options.userId;
 
     async.waterfall([
+
+      // Find the user to be verified
       function(done){
         User.findById(userId, function(err, user){
           if (err){
@@ -24,18 +25,21 @@ module.exports = {
           done(null, user);
         });
       },
+
+      // Generate the token and save token and user email to database
       function(user, done){
-        // Generate the token and save token and user email to database
         crypto.randomBytes(16, function(err, buf) {
           var token = buf.toString('hex');
 
-          user.email = email;
           user.verificationToken = token;
+
           user.save(function(err){
-            done(err, token, email);
+            done(err, token, user.email);
           });
         });
       },
+
+      // Send an email
       function(token, email, done){
         MailService.sendVerification({
           email: email,

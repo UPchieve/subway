@@ -1,8 +1,19 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
+var validator = require('validator');
 
 var userSchema = new mongoose.Schema({
-  email: { type: String, unique: true, lowercase: true },
+  email: {
+    type: String,
+    unique: true,
+    lowercase: true,
+    validate: {
+      validator: function(v){
+        return validator.isEmail(v);
+      },
+      message: '{VALUE} is not a valid email'
+    }
+  },
   password: String,
 
   verified: {
@@ -19,7 +30,12 @@ var userSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
-  isTutor: {
+
+  isVolunteer: {
+    type: Boolean,
+    default: false
+  },
+  isAdmin: {
     type: Boolean,
     default: false
   },
@@ -38,7 +54,8 @@ userSchema.methods.parseProfile = function(){
     email: this.email,
     verified: this.verified,
     picture: this.picture,
-    isTutor: this.isTutor,
+    isVolunteer: this.isVolunteer,
+    isAdmin: this.isAdmin,
     createdAt: this.createdAt
   };
 };

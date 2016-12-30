@@ -30,6 +30,9 @@ module.exports = function(app){
 
   router.get('/logout', function(req, res){
       req.logout();
+      res.json({
+        msg: 'You have been logged out'
+      });
   });
 
   router.post('/login',
@@ -70,7 +73,6 @@ module.exports = function(app){
               email: user.email
             }, function(err, email){
               if (err){
-                res.json({err: err});
                 res.json({msg: 'Registration successful. Error sending verification email: ' + err});
               } else {
                 res.json({msg: 'Registration successful. Verification email sent to ' + email});
