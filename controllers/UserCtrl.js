@@ -4,8 +4,8 @@ module.exports = {
   get: function(options, callback){
     var userId = options.userId;
     User.findById(userId, function(err, user){
-      if (err){
-        callback(new Error(err));
+      if (err || !user){
+        callback('Could not get user');
       } else {
         user.getProfile(callback);
       }
