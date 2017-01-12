@@ -36,6 +36,8 @@ passport.use(new LocalStrategy({
  * Login Required middleware.
  */
 exports.isAuthenticated = function(req, res, next) {
+  console.log(req.cookies);
+  console.log(req.sessionID);
   if (req.isAuthenticated()){
     return next();
   }

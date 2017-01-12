@@ -1,6 +1,5 @@
 var express = require('express');
 var session = require('express-session');
-var flash = require('express-flash');
 var passport = require('passport');
 var bcrypt = require('bcrypt');
 var MongoStore = require('connect-mongo')(session);
@@ -14,17 +13,17 @@ module.exports = function(app){
   console.log('Auth module');
 
   require('./passport');
-
   app.use(session({
     resave: true,
     saveUninitialized: true,
     secret: config.sessionSecret,
     store: new MongoStore({ url: config.database, autoReconnect: true }),
-    cookie: { httpOnly: false }
+    cookie: {
+      httpOnly: false
+    }
   }));
   app.use(passport.initialize());
   app.use(passport.session());
-  app.use(flash());
 
   var router = new express.Router();
 
@@ -38,6 +37,8 @@ module.exports = function(app){
   router.post('/login',
     passport.authenticate('local'), // Delegate auth logic to passport middleware
     function(req, res) {
+      console.log(res.get('Content-Type'));
+      console.log(req.sessionID);
       // If successfully authed, return user object (otherwise 401 is returned from middleware)
       res.json({
           user: req.user
