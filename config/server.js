@@ -10,5 +10,6 @@ module.exports = {
 		senders: {
 			noreply: 'noreply@believeachieve.com'
 		}
-	}
+	},
+	socketsPort: 3001
 };
