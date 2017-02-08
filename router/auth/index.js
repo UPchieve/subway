@@ -37,8 +37,6 @@ module.exports = function(app){
   router.post('/login',
     passport.authenticate('local'), // Delegate auth logic to passport middleware
     function(req, res) {
-      console.log(res.get('Content-Type'));
-      console.log(req.sessionID);
       // If successfully authed, return user object (otherwise 401 is returned from middleware)
       res.json({
           user: req.user
