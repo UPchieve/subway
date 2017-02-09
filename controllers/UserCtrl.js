@@ -14,12 +14,19 @@ module.exports = {
   update: function(options, callback){
     var userId = options.userId;
 
-    var data = options.data || {};
-        picture = data.picture;
+    var data = options.data || {},
+        name = data.name,
+        picture = data.picture,
+        update = {};
 
-    User.findByIdAndUpdate(userId, {
-      picture: picture
-    }, { new: true }, function(err, user){
+    if (name){
+      update.name = name;
+    }
+    if (picture){
+      update.picture = picture;
+    }
+
+    User.findByIdAndUpdate(userId, update, { new: true }, function(err, user){
       if (err){
         return callback(err);
       } else {

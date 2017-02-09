@@ -20,6 +20,7 @@ module.exports = function(router){
 		UserCtrl.update({
 			userId: req.user._id,
 			data: {
+				name: data.name,
 				picture: data.picture
 			}
 		}, function(err, user){

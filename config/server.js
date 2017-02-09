@@ -11,5 +11,8 @@ module.exports = {
 			noreply: 'noreply@believeachieve.com'
 		}
 	},
+	client: {
+		host: 'localhost:8080'
+	},
 	socketsPort: 3001
 };

@@ -13,7 +13,7 @@ module.exports = {
       subject: 'Verify your account',
       text: [
         'Please verify your account:',
-        'http://' + config.host + '/action/verify/' + token
+        'http://' + config.client.host + '/#/action/verify/' + token
       ].join('\n\n')
     };
 
