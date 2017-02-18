@@ -67,17 +67,30 @@ module.exports = function(app){
               err: err
             });
           } else {
-            VerificationCtrl.initiateVerification({
-              userId: user._id,
-              email: user.email
-            }, function(err, email){
+            req.login(user, function(err){
               if (err){
-                res.json({msg: 'Registration successful. Error sending verification email: ' + err});
+                res.json({
+                  err: err
+                });
               } else {
-                res.json({msg: 'Registration successful. Verification email sent to ' + email});
+                res.json({
+                  user: user
+                });
               }
             });
           }
+          // } else {
+          //   VerificationCtrl.initiateVerification({
+          //     userId: user._id,
+          //     email: user.email
+          //   }, function(err, email){
+          //     if (err){
+          //       res.json({msg: 'Registration successful. Error sending verification email: ' + err});
+          //     } else {
+          //       res.json({msg: 'Registration successful. Verification email sent to ' + email});
+          //     }
+          //   });
+          // }
         })
       })
     })

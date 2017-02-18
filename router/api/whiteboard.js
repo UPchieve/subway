@@ -9,73 +9,88 @@ module.exports = function(app){
   var io = socket(server);
 
   io.on('connection', function(socket){
+    var room;
 
-    socket.on('room', function(room){
-      socket.join(room);
+    socket.on('room', function(pRoom){
+      socket.join(pRoom);
+      room = pRoom;
+      console.log('Joining room', pRoom);
+    });
 
-      socket.on('drawClick', function(data) {
-        socket.to(room).emit('draw', {
-          x: data.x,
-          y: data.y,
-          type: data.type
-        });
+    socket.on('drawClick', function(data) {
+      if (!room) return;
+      socket.to(room).emit('draw', {
+        x: data.x,
+        y: data.y,
+        type: data.type
       });
+    });
 
-      socket.on('saveImage', function() {
-        socket.to(room).emit('save');
-      });
+    socket.on('saveImage', function() {
+      if (!room) return;
+      socket.to(room).emit('save');
+    });
 
-      socket.on('undoClick', function() {
-        socket.to(room).emit('undo');
-      });
+    socket.on('undoClick', function() {
+      if (!room) return;
+      socket.to(room).emit('undo');
+    });
 
-      socket.on('clearClick', function() {
-        socket.to(room).emit('clear');
-      });
+    socket.on('clearClick', function() {
+      if (!room) return;
+      socket.to(room).emit('clear');
+    });
 
-      socket.on('changeColor', function(data) {
-        socket.to(room).emit('color', data);
-      });
+    socket.on('changeColor', function(data) {
+      if (!room) return;
+      socket.to(room).emit('color', data);
+    });
 
-      socket.on('changeWidth', function(data) {
-        socket.to(room).emit('width', data);
-      });
+    socket.on('changeWidth', function(data) {
+      if (!room) return;
+      socket.to(room).emit('width', data);
+    });
 
-      socket.on('dragStart', function(data) {
-      	socket.to(room).emit('dstart', {
-      		x: data.x,
-  	    	y: data.y,
-  	    	color:data.color
-      	});
+    socket.on('dragStart', function(data) {
+      if (!room) return;
+      console.log('Emitting to room', room);
+      socket.to(room).emit('dstart', {
+        x: data.x,
+        y: data.y,
+        color:data.color
       });
+    });
 
-      socket.on('dragAction', function(data) {
-      	socket.to(room).emit('drag', {
-      		x: data.x,
-  	    	y: data.y,
-  	    	color:data.color
-      	});
+    socket.on('dragAction', function(data) {
+      if (!room) return;
+      socket.to(room).emit('drag', {
+        x: data.x,
+        y: data.y,
+        color:data.color
       });
+    });
 
-      socket.on('dragEnd', function(data) {
-      	socket.to(room).emit('dend', {
-      		x: data.x,
-  	    	y: data.y,
-  	    	color:data.color
-      	});
+    socket.on('dragEnd', function(data) {
+      if (!room) return;
+      socket.to(room).emit('dend', {
+        x: data.x,
+        y: data.y,
+        color:data.color
       });
+    });
 
-      socket.on('insertText', function(data) {
-        socket.to(room).emit('text', {
-          text: data.text,
-          x: data.x,
-          y: data.y
-        });
+    socket.on('insertText', function(data) {
+      if (!room) return;
+      socket.to(room).emit('text', {
+        text: data.text,
+        x: data.x,
+        y: data.y
       });
+    });
 
-      socket.on('resetScreen', function() {
-        socket.to(room).emit('reset');
-      });
+    socket.on('resetScreen', function() {
+      if (!room) return;
+      socket.to(room).emit('reset');
     });
   });
 
