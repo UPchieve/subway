@@ -21,10 +21,6 @@ module.exports = function(router){
 			userId: req.user._id,
 			data: {
 				username: data.username,
-				picture: data.picture,
-				race: data.race,
-				hs: data.hs,
-				subject: data.subject,
 				year: data.year,
 				month: data.month,
 				day: data.day,
@@ -50,18 +46,95 @@ module.exports = function(router){
         });
       }
 
-      .get(function(req, res){
-            if (req.user){
-                res.json({
-                    user: req.user
-                    user.picture = picture
-                });
-            } else {
-                res.json({
-                    err: 'User does not exist'
-                });
-            }
+      UserCtrl.update({
+			userId: req.picture;
+			data: {
+				picture: data.picture,
+			}
+		}, function(err, user){
+			if (err){
+				res.json({err: err});
+			} else {
+				res.json({
+					user: user
+				});
+			}
+		});
+    }
+
+    router.put('/race', function(req, res){
+    var race = req.body.race
+
+      if (!race || !/\S/.test(race)){
+        return res.json({
+          err: 'No race given'
         });
+      }
+
+      UserCtrl.update({
+			userId: req.race;
+			data: {
+				picture: data.race,
+			}
+		}, function(err, user){
+			if (err){
+				res.json({err: err});
+			} else {
+				res.json({
+					user: user
+				});
+			}
+		});
+    }
+
+    router.put('/hs', function(req, res){
+    var hs = req.body.hs
+
+      if (!hs || !/\S/.test(hs)){
+        return res.json({
+          err: 'No high school given'
+        });
+      }
+
+      UserCtrl.update({
+			userId: req.hs;
+			data: {
+				hs: data.hs,
+			}
+		}, function(err, user){
+			if (err){
+				res.json({err: err});
+			} else {
+				res.json({
+					user: user
+				});
+			}
+		});
+    }
+
+    router.put('/subject', function(req, res){
+    var subject = req.body.hs
+
+      if (!subject || !/\S/.test(subject)){
+        return res.json({
+          err: 'No subject of study given'
+        });
+      }
+
+      UserCtrl.update({
+			userId: req.subject;
+			data: {
+				subject: data.subject,
+			}
+		}, function(err, user){
+			if (err){
+				res.json({err: err});
+			} else {
+				res.json({
+					user: user
+				});
+			}
+		});
     }
 
     router.put('/name', function(req, res){
