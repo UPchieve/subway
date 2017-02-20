@@ -20,6 +20,13 @@ module.exports = function(app){
       console.log('Joining room', pRoom);
     });
 
+    socket.on('message', function(data) {
+      if (!room) return;
+      socket.broadcast.to(room).emit('messageSend', {
+        message: data.message
+      });
+    });
+
     socket.on('drawClick', function(data) {
       if (!room) return;
       io.to(room).emit('draw', {
