@@ -11,7 +11,7 @@ module.exports = function(app){
   io.on('connection', function(socket){
     var room;
 
-    socket.on('room', function(pRoom){
+    socket.on('room', function(pRoom) {
       if (room) {
         socket.leave(room);
       }
@@ -38,12 +38,12 @@ module.exports = function(app){
 
     socket.on('saveImage', function() {
       if (!room) return;
-      io.to(room).emit('save');
+      socket.broadcast.to(room).emit('save');
     });
 
     socket.on('undoClick', function() {
       if (!room) return;
-      io.to(room).emit('undo');
+      socket.broadcast.to(room).emit('undo');
     });
 
     socket.on('clearClick', function() {
@@ -53,18 +53,18 @@ module.exports = function(app){
 
     socket.on('changeColor', function(data) {
       if (!room) return;
-      io.to(room).emit('color', data);
+      socket.broadcast.to(room).emit('color', data);
     });
 
     socket.on('changeWidth', function(data) {
       if (!room) return;
-      io.to(room).emit('width', data);
+      socket.broadcast.to(room).emit('width', data);
     });
 
     socket.on('dragStart', function(data) {
       if (!room) return;
       console.log('Emitting to room', room);
-      io.to(room).emit('dstart', {
+      socket.broadcast.to(room).emit('dstart', {
         x: data.x,
         y: data.y,
         color:data.color
@@ -73,7 +73,7 @@ module.exports = function(app){
 
     socket.on('dragAction', function(data) {
       if (!room) return;
-      io.to(room).emit('drag', {
+      socket.broadcast.to(room).emit('drag', {
         x: data.x,
         y: data.y,
         color:data.color
