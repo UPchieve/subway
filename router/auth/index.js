@@ -1,7 +1,6 @@
 var express = require('express');
 var session = require('express-session');
 var passport = require('passport');
-var bcrypt = require('bcrypt');
 var MongoStore = require('connect-mongo')(session);
 
 var VerificationCtrl = require('../../controllers/VerificationCtrl');
@@ -57,42 +56,128 @@ module.exports = function(app){
     var user = new User();
     user.email = email;
 
-    bcrypt.genSalt(config.saltRounds, function(err, salt){
-      bcrypt.hash(password, salt, function(err, hash){
-        user.password = hash; // Note the salt is embedded in the final hash
+    user.hashPassword(function(err, hash){
+      user.password = hash; // Note the salt is embedded in the final hash
 
-        user.save(function(err){
-          if (err){
-            res.json({
-              err: err
-            });
-          } else {
+      if (err){
+        res.json({
+          err: 'Could not hash password'
+        });
+        return;
+      }
+
+      user.save(function(err){
+        if (err){
+          res.json({
+            err: err
+          });
+        } else {
+
+          VerificationCtrl.initiateVerification({
+            userId: user._id,
+            email: user.email
+          }, function(err, email){
+            var msg;
+            if (err){
+              msg = 'Registration successful. Error sending verification email: ' + err;
+            } else {
+              msg = 'Registration successful. Verification email sent to ' + email;
+            }
+
             req.login(user, function(err){
               if (err){
                 res.json({
+                  msg: msg,
                   err: err
                 });
               } else {
                 res.json({
+                  msg: msg,
                   user: user
                 });
               }
             });
+          });
+        }
+      });
+    });
+  });
+
+  router.post('/register/volunteer', function(req, res){
+    var email = req.body.email,
+        password = req.body.password,
+        code = req.body.code;
+
+    if (!email || !password){
+      return res.json({
+        err: 'Must supply an email and password for registration'
+      });
+    } else if (!code){
+      return res.json({
+        err: 'Must provide a code to register as a volunteer'
+      });
+    }
+
+    User.checkCode(code, function(err, isValidCode){
+      if (err){
+        res.json({
+          err: err
+        });
+      } else if (!isValidCode){
+        res.json({
+          err: 'Invalid registation code'
+        });
+      } else {
+        var user = new User();
+        user.email = email;
+        user.isVolunteer = true;
+
+        user.hashPassword(function(err, hash){
+          user.password = hash; // Note the salt is embedded in the final hash
+
+          if (err){
+            res.json({
+              err: 'Could not hash password'
+            });
+            return;
           }
-          // } else {
-          //   VerificationCtrl.initiateVerification({
-          //     userId: user._id,
-          //     email: user.email
-          //   }, function(err, email){
-          //     if (err){
-          //       res.json({msg: 'Registration successful. Error sending verification email: ' + err});
-          //     } else {
-          //       res.json({msg: 'Registration successful. Verification email sent to ' + email});
-          //     }
-          //   });
-          // }
-        })
-      })
+
+          user.save(function(err){
+            if (err){
+              res.json({
+                err: err
+              });
+            } else {
+
+              VerificationCtrl.initiateVerification({
+                userId: user._id,
+                email: user.email
+              }, function(err, email){
+                var msg;
+                if (err){
+                  msg = 'Registration successful. Error sending verification email: ' + err;
+                } else {
+                  msg = 'Registration successful. Verification email sent to ' + email;
+                }
+
+                req.login(user, function(err){
+                  if (err){
+                    res.json({
+                      msg: msg,
+                      err: err
+                    });
+                  } else {
+                    res.json({
+                      msg: msg,
+                      user: user
+                    });
+                  }
+                });
+              });
+            }
+          });
+        });
+      }
     })
   });
 
