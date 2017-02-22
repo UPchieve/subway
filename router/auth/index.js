@@ -181,5 +181,19 @@ module.exports = function(app){
     })
   });
 
+  router.post('/register/check', function(req, res){
+    var code = req.body.code;
+    User.checkCode(code, function(err, isValidCode){
+      if (err){
+        res.json({
+          err: err
+        });
+      } else {
+        res.json({
+          valid: isValidCode
+        });
+      }
+    });
+
   app.use('/auth', router);
 };
