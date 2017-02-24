@@ -45,66 +45,6 @@ module.exports = function(app){
 
   router.post('/register', function(req, res){
     var email = req.body.email,
-        password = req.body.password;
-
-    if (!email || !password){
-      return res.json({
-        err: 'Must supply an email and password for registration'
-      });
-    }
-
-    var user = new User();
-    user.email = email;
-
-    user.hashPassword(function(err, hash){
-      user.password = hash; // Note the salt is embedded in the final hash
-
-      if (err){
-        res.json({
-          err: 'Could not hash password'
-        });
-        return;
-      }
-
-      user.save(function(err){
-        if (err){
-          res.json({
-            err: err
-          });
-        } else {
-
-          VerificationCtrl.initiateVerification({
-            userId: user._id,
-            email: user.email
-          }, function(err, email){
-            var msg;
-            if (err){
-              msg = 'Registration successful. Error sending verification email: ' + err;
-            } else {
-              msg = 'Registration successful. Verification email sent to ' + email;
-            }
-
-            req.login(user, function(err){
-              if (err){
-                res.json({
-                  msg: msg,
-                  err: err
-                });
-              } else {
-                res.json({
-                  msg: msg,
-                  user: user
-                });
-              }
-            });
-          });
-        }
-      });
-    });
-  });
-
-  router.post('/register/volunteer', function(req, res){
-    var email = req.body.email,
         password = req.body.password,
         code = req.body.code;
 
@@ -114,7 +54,7 @@ module.exports = function(app){
       });
     } else if (!code){
       return res.json({
-        err: 'Must provide a code to register as a volunteer'
+        err: 'Must provide a code to register'
       });
     }
 
@@ -183,6 +123,12 @@ module.exports = function(app){
 
   router.post('/register/check', function(req, res){
     var code = req.body.code;
+    if (!code){
+      res.json({
+        err: 'No registration code given'
+      });
+      return;
+    }
     User.checkCode(code, function(err, isValidCode){
       if (err){
         res.json({
@@ -194,6 +140,7 @@ module.exports = function(app){
         });
       }
     });
+  });
 
   app.use('/auth', router);
 };
