@@ -22,11 +22,6 @@ var userSchema = new mongoose.Schema({
   },
   verificationToken: String,
 
-  username: {
-    type: String,
-    required: true,
-    default: ''
-  },
   firstname: {
     type: String,
     required: true,
@@ -42,7 +37,7 @@ var userSchema = new mongoose.Schema({
     required: true,
     default: ''
   },
-  hs: {
+  highschool: {
     type: String,
     required: true,
     default: ''

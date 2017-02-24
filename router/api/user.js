@@ -20,11 +20,16 @@ module.exports = function(router){
 		UserCtrl.update({
 			userId: req.user._id,
 			data: {
-				username: data.username,
 				year: data.year,
 				month: data.month,
 				day: data.day,
-				email: data.email
+				email: data.email,
+				picture: data.picture,
+				picture: data.race,
+				highschool: data.highschool,
+				subject: data.subject,
+				firstname: data.firstname,
+				lastname: data.lastname,
 			}
 		}, function(err, user){
 			if (err){
@@ -37,140 +42,21 @@ module.exports = function(router){
 		});
 	});
 
-    router.put('/picture', function(req, res){
-    var picture = req.body.picture
-
-      if (!picture || !/\S/.test(picture)){
-        return res.json({
-          err: 'No picture URL given'
-        });
-      }
-
-      UserCtrl.update({
-			userId: req.picture;
-			data: {
-				picture: data.picture,
-			}
-		}, function(err, user){
-			if (err){
-				res.json({err: err});
-			} else {
-				res.json({
-					user: user
-				});
-			}
-		});
-    }
-
-    router.put('/race', function(req, res){
-    var race = req.body.race
-
-      if (!race || !/\S/.test(race)){
-        return res.json({
-          err: 'No race given'
-        });
-      }
-
-      UserCtrl.update({
-			userId: req.race;
-			data: {
-				picture: data.race,
-			}
-		}, function(err, user){
-			if (err){
-				res.json({err: err});
-			} else {
-				res.json({
-					user: user
-				});
-			}
-		});
-    }
-
-    router.put('/hs', function(req, res){
-    var hs = req.body.hs
-
-      if (!hs || !/\S/.test(hs)){
-        return res.json({
-          err: 'No high school given'
-        });
-      }
-
-      UserCtrl.update({
-			userId: req.hs;
-			data: {
-				hs: data.hs,
-			}
-		}, function(err, user){
-			if (err){
-				res.json({err: err});
-			} else {
-				res.json({
-					user: user
-				});
-			}
-		});
-    }
-
-    router.put('/subject', function(req, res){
-    var subject = req.body.hs
-
-      if (!subject || !/\S/.test(subject)){
-        return res.json({
-          err: 'No subject of study given'
-        });
-      }
-
-      UserCtrl.update({
-			userId: req.subject;
-			data: {
-				subject: data.subject,
-			}
-		}, function(err, user){
-			if (err){
-				res.json({err: err});
-			} else {
-				res.json({
-					user: user
-				});
-			}
-		});
-    }
-
-    router.put('/name', function(req, res){
-    var firstname = req.body.firstname
-    var lastname = req.body.lastname
-
-      if (!firstname || !/\S/.test(firstname)){
-        return res.json({
-          err: 'No first name given'
-        });
-      }
-
-      if (!lastname || !/\S/.test(lastname)){
-        return res.json({
-          err: 'No last name given'
-        });
-      }
-
-      .get(function(req, res){
-            if (req.user){
-                res.json({
-                    user: req.user
-                    user.firstname = firstname
-                    user.lastname = lastname
-                });
-            } else {
-                res.json({
-                    err: 'User does not exist'
-                });
-            }
-        });
-    }
-
 	router.get('/user/:id', function(req, res){
 		UserCtrl.get({
 			userId: req.params.id
+		}, function(err, profile){
+			if (err){
+				res.json({err: err});
+			} else {
+				res.json(profile);
+			}
+		});
+	});
+
+	router.get('/user/:picture', function(req, res){
+		UserCtrl.get({
+			picture: req.params.picture
 		}, function(err, profile){
 			if (err){
 				res.json({err: err});
@@ -207,6 +93,78 @@ module.exports = function(router){
 	router.get('/user/:email', function(req, res){
 		UserCtrl.get({
 			email: req.params.email
+		}, function(err, profile){
+			if (err){
+				res.json({err: err});
+			} else {
+				res.json(profile);
+			}
+		});
+	});
+
+	router.get('/user/:year', function(req, res){
+		UserCtrl.get({
+			year: req.params.year
+		}, function(err, profile){
+			if (err){
+				res.json({err: err});
+			} else {
+				res.json(profile);
+			}
+		});
+	});
+
+	router.get('/user/:month', function(req, res){
+		UserCtrl.get({
+			month: req.params.month
+		}, function(err, profile){
+			if (err){
+				res.json({err: err});
+			} else {
+				res.json(profile);
+			}
+		});
+	});
+
+	router.get('/user/:day', function(req, res){
+		UserCtrl.get({
+			day: req.params.day
+		}, function(err, profile){
+			if (err){
+				res.json({err: err});
+			} else {
+				res.json(profile);
+			}
+		});
+	});
+
+	router.get('/user/:race', function(req, res){
+		UserCtrl.get({
+			race: req.params.race
+		}, function(err, profile){
+			if (err){
+				res.json({err: err});
+			} else {
+				res.json(profile);
+			}
+		});
+	});
+
+	router.get('/user/:highschool', function(req, res){
+		UserCtrl.get({
+			highschool: req.params.highscool
+		}, function(err, profile){
+			if (err){
+				res.json({err: err});
+			} else {
+				res.json(profile);
+			}
+		});
+	});
+
+	router.get('/user/:year', function(req, res){
+		UserCtrl.get({
+			subject: req.params.subject
 		}, function(err, profile){
 			if (err){
 				res.json({err: err});

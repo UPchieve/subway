@@ -93,8 +93,7 @@ module.exports = function(app){
         });
     }
   router.post('/register', function(req, res){
-    var user = req.body.username,
-        email = req.body.email,
+    var email = req.body.email,
         firstname = req.body.firstname,
         lastname = req.body.lastname,
         race = req.body.race,
@@ -110,12 +109,6 @@ module.exports = function(app){
     if (!email || !password){
       return res.json({
         err: 'Must supply an email and password for registration'
-      });
-    }
-
-    if (!username) {
-      return res.json({
-        err: 'Must supply a username for registration'
       });
     }
 
@@ -193,7 +186,6 @@ module.exports = function(app){
     }
 
     var user = new User();
-    user.username = user,
     user.email = email,
     user.firstname = firstname,
     user.lastname = lastname,
