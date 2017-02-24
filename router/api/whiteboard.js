@@ -22,7 +22,9 @@ module.exports = function(app){
 
     socket.on('message', function(data) {
       if (!room) return;
+      console.log('SENDING MESSAGE');
       socket.broadcast.to(room).emit('messageSend', {
+        timeStamp: data.timeStamp,
         message: data.message
       });
     });
