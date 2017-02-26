@@ -7,9 +7,8 @@ var config = require('../../config/server.js');
 module.exports = function(app){
   var server = http.createServer(app);
   var io = socket(server);
-
+  var room;
   io.on('connection', function(socket){
-    var room;
 
     socket.on('room', function(pRoom) {
       if (room) {
@@ -21,9 +20,10 @@ module.exports = function(app){
     });
 
     socket.on('message', function(data) {
-      if (!room) return;
+      if (!data.room) return;
       console.log('SENDING MESSAGE');
-      socket.broadcast.to(room).emit('messageSend', {
+      io.to(data.room).emit('messageSend', {
+        senderName: data.senderName,
         timeStamp: data.timeStamp,
         message: data.message
       });
