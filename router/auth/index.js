@@ -58,21 +58,21 @@ module.exports = function(app){
       });
     }
 
-    User.checkCode(code, function(err, isValidCode){
+    User.checkCode(code, function(err, data){
       if (err){
         res.json({
           err: err
         });
-      } else if (!isValidCode){
+      } else if (!data.studentCode && !data.volunteerCode){
         res.json({
           err: 'Invalid registation code'
         });
       } else {
         var user = new User();
         user.email = email;
-        user.isVolunteer = true;
+        user.isVolunteer = data.volunteerCode === true;
 
-        user.hashPassword(function(err, hash){
+        user.hashPassword(password, function(err, hash){
           user.password = hash; // Note the salt is embedded in the final hash
 
           if (err){
@@ -123,20 +123,21 @@ module.exports = function(app){
 
   router.post('/register/check', function(req, res){
     var code = req.body.code;
+    console.log(code);
     if (!code){
       res.json({
         err: 'No registration code given'
       });
       return;
     }
-    User.checkCode(code, function(err, isValidCode){
+    User.checkCode(code, function(err, data){
       if (err){
         res.json({
           err: err
         });
       } else {
         res.json({
-          valid: isValidCode
+          valid: data.studentCode || data.volunteerCode
         });
       }
     });
