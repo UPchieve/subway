@@ -3,12 +3,28 @@ var socket = require('socket.io');
 
 var config = require('../../config/server.js');
 
+var SessionCtrl = require('../../controllers/SessionCtrl.js');
+
 
 module.exports = function(app){
   var server = http.createServer(app);
   var io = socket(server);
-  var room;
+
   io.on('connection', function(socket){
+
+    // On new socket connection, init tracking objects for session/users
+    var currentSession,
+        student,
+        volunteer;
+
+    // Session management
+    socket.on('join', function(data){
+
+    });
+
+    socket.on('end', function(){
+
+    });
 
     socket.on('room', function(pRoom) {
       if (room) {
@@ -28,6 +44,8 @@ module.exports = function(app){
         message: data.message
       });
     });
+
+    // Whiteboard interaction
 
     socket.on('drawClick', function(data) {
       if (!room) return;
