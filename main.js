@@ -10,7 +10,7 @@ var cors = require('cors');
 var mongoose = require('mongoose');
 
 // Configuration
-var config = require('./config/server');
+var config = require('./config');
 
 // Database
 mongoose.connect(config.database);

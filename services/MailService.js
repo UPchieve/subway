@@ -1,4 +1,4 @@
-var config = require('../config/server');
+var config = require('../config');
 
 var transporter = require('nodemailer').createTransport(config.mail.auth);
 
