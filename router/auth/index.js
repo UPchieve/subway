@@ -5,7 +5,7 @@ var MongoStore = require('connect-mongo')(session);
 
 var VerificationCtrl = require('../../controllers/VerificationCtrl');
 
-var config = require('../../config/server.js');
+var config = require('../../config.js');
 var User = require('../../models/User.js');
 
 module.exports = function(app){
@@ -16,7 +16,7 @@ module.exports = function(app){
     resave: true,
     saveUninitialized: true,
     secret: config.sessionSecret,
-    store: new MongoStore({ url: config.database, autoReconnect: true }),
+    store: new MongoStore({ url: config.database, autoReconnect: true, collection: 'auth-sessions' }),
     cookie: {
       httpOnly: false
     }

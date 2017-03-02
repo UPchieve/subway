@@ -4,7 +4,7 @@ module.exports = function(router){
 	router.route('/session/new')
 		.post(function(req, res){
 			var data = req.body || {},
-					sessionType = req.sessionType,
+					sessionType = data.sessionType,
 					user = req.user;
 
 			SessionCtrl.create({

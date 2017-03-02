@@ -1,7 +1,5 @@
 var mongoose = require('mongoose');
 
-// var config = require('../config/server.js');
-
 var validTypes = [
   'Math', 'Counseling'
 ];
@@ -56,7 +54,7 @@ var sessionSchema = new mongoose.Schema({
 
 sessionSchema.methods.saveMessage = function(messageObj, cb){
   'use strict';
-  
+
 };
 
 module.exports = mongoose.model('Session', sessionSchema);

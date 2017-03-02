@@ -1,8 +1,9 @@
 var http = require('http');
 var socket = require('socket.io');
 
-var config = require('../../config/server.js');
+var config = require('../../config.js');
 
+var User = require('../../models/User.js');
 var SessionCtrl = require('../../controllers/SessionCtrl.js');
 
 
@@ -10,81 +11,108 @@ module.exports = function(app){
   var server = http.createServer(app);
   var io = socket(server);
 
-  io.on('connection', function(socket){
+  var activeSessions = {},   // id => Session
+      sessionUsers = {},     // id => [User]
+      _sessionSockets = {}; // id => socket
 
-    // On new socket connection, init tracking objects for session/users
-    var currentSession,
-        student,
-        volunteer;
+  io.on('connection', function(socket){
 
     // Session management
     socket.on('join', function(data){
-
+      console.log('Joining session...', data.sessionId);
+      SessionCtrl.joinSession({
+        sessionId: data.sessionId,
+        user: data.user
+      }, function(err, session){
+        if (!err){
+          activeSessions[session._id] = session;
+          _sessionSockets[session._id] = socket;
+          socket.join(data.sessionId);
+          console.log('Session joined:', session);
+          io.emit('sessions', activeSessions);
+        }
+      })
     });
 
-    socket.on('end', function(){
+    socket.on('disconnect', function(){
+      console.log('Client disconnected');
 
+      var sessionId;
+
+      Object.keys(_sessionSockets).some(function(id){
+        if (_sessionSockets[id] === socket){
+          sessionId = id;
+          return true;
+        }
+      });
+
+      var session = activeSessions[sessionId];
+      SessionCtrl.leaveSession({
+        session: session,
+
+      })
+
+      delete activeSessions[sessionId];
+      delete _sessionSockets[sessionId];
+      socket.leave(sessionId);
+      io.emit('sessions', activeSessions);
     });
 
-    socket.on('room', function(pRoom) {
-      if (room) {
-        socket.leave(room);
-      }
-      socket.join(pRoom);
-      room = pRoom;
-      console.log('Joining room', pRoom);
+    socket.on('list', function(){
+      var sessions = Object.keys(activeSessions).map(function(id){
+        return activeSessions[id];
+      });
+      io.emit('sessions', activeSessions);
     });
+
 
     socket.on('message', function(data) {
-      if (!data.room) return;
+      if (!data.sessionId) return;
       console.log('SENDING MESSAGE');
-      io.to(data.room).emit('messageSend', {
+      var session = activeSessions[data.sessionId];
+      var message = {
         senderName: data.senderName,
         timeStamp: data.timeStamp,
         message: data.message
-      });
+      };
+
+      session.sendMessage(message, function(){
+        io.to(data.sessionId).emit('messageSend', message);
+      })
     });
 
     // Whiteboard interaction
 
     socket.on('drawClick', function(data) {
-      if (!room) return;
-      io.to(room).emit('draw', {
+      io.to(data.sessionId).emit('draw', {
         x: data.x,
         y: data.y,
         type: data.type
       });
     });
 
-    socket.on('saveImage', function() {
-      if (!room) return;
-      socket.broadcast.to(room).emit('save');
+    socket.on('saveImage', function(data) {
+      io.in(data.sessionId).emit('save');
     });
 
-    socket.on('undoClick', function() {
-      if (!room) return;
-      socket.broadcast.to(room).emit('undo');
+    socket.on('undoClick', function(data) {
+      io.in(data.sessionId).emit('undo');
     });
 
-    socket.on('clearClick', function() {
-      if (!room) return;
-      io.to(room).emit('clear');
+    socket.on('clearClick', function(data) {
+      io.to(data.sessionId).emit('clear');
     });
 
     socket.on('changeColor', function(data) {
-      if (!room) return;
-      socket.broadcast.to(room).emit('color', data);
+      io.in(data.sessionId).emit('color', data);
     });
 
     socket.on('changeWidth', function(data) {
-      if (!room) return;
-      socket.broadcast.to(room).emit('width', data);
+      io.in(data.sessionId).emit('width', data);
     });
 
     socket.on('dragStart', function(data) {
-      if (!room) return;
-      console.log('Emitting to room', room);
-      socket.broadcast.to(room).emit('dstart', {
+      io.in(data.sessionId).emit('dstart', {
         x: data.x,
         y: data.y,
         color:data.color
@@ -92,8 +120,7 @@ module.exports = function(app){
     });
 
     socket.on('dragAction', function(data) {
-      if (!room) return;
-      socket.broadcast.to(room).emit('drag', {
+      io.in(data.sessionId).emit('drag', {
         x: data.x,
         y: data.y,
         color:data.color
@@ -101,8 +128,7 @@ module.exports = function(app){
     });
 
     socket.on('dragEnd', function(data) {
-      if (!room) return;
-      io.to(room).emit('dend', {
+      io.to(data.sessionId).emit('dend', {
         x: data.x,
         y: data.y,
         color:data.color
@@ -110,8 +136,7 @@ module.exports = function(app){
     });
 
     socket.on('insertText', function(data) {
-      if (!room) return;
-      io.to(room).emit('text', {
+      io.to(data.sessionId).emit('text', {
         text: data.text,
         x: data.x,
         y: data.y
@@ -119,8 +144,7 @@ module.exports = function(app){
     });
 
     socket.on('resetScreen', function() {
-      if (!room) return;
-      io.to(room).emit('reset');
+      io.to(data.sessionId).emit('reset');
     });
   });
 

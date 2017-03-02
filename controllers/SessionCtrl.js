@@ -1,9 +1,11 @@
+var Q = require('q');
+
 var Session = require('../models/Session');
 
 module.exports = {
   create: function(options, cb){
     var user = options.user || {},
-        userId = user.userId,
+        userId = user._id,
         type = options.type;
 
 
@@ -23,14 +25,21 @@ module.exports = {
     session.save(cb);
   },
 
-  getSession: function(options, cb){
-    var sessionId = options.sessionId;
+  joinSession: function(options, cb){
+    var sessionId = options.sessionId,
+        user = options.user;
 
-    Session.findById(sessionId, function(err, session){
-      Session.populate(session, function(err, populatedSession){
-
+    Session.findOne({ _id: sessionId })
+      .populate('student volunteer')
+      .exec(function(err, session){
+        console.log(session);
+        if (user.isVolunteer){
+          session.volunteer = user;
+        } else {
+          session.student = user;
+        }
+        session.save(cb);
       });
-    });
   },
 
   // Get list of all sessions that are not ended, with recent activity

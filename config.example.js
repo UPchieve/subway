@@ -2,13 +2,13 @@
 
 module.exports = {
 	host: process.env.SERVER_HOST || 'localhost:3000',
-	database: 'mongodb://admin:NyN6Ff7pTjn2HL@ds011331.mlab.com:11331/believeachieve',
+	database: 'mongodb://user:password@mongodb/database',
 	sessionSecret: process.env.SESSION_SECRET || 'PoKtSuRS2phosxZRV9XEVS9hVyMTzSyB',
 	saltRounds: 10,
 	mail: {
-		auth: 'smtps://believeachieve.noreply:]N8tepDZdovXgMdw*9W8@smtp.gmail.com',
+		auth: 'smtps://user:password@smtp.example.com',
 		senders: {
-			noreply: 'noreply@believeachieve.com'
+			noreply: 'noreply@example.com'
 		}
 	},
 	client: {

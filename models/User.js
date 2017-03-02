@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
 var validator = require('validator');
 
-var config = require('../config/server.js');
+var config = require('../config.js');
 
 var userSchema = new mongoose.Schema({
   email: {
