@@ -133,7 +133,11 @@ SessionManager.prototype.list = function(){
   return Object.keys(sessions).map(function(id){
     return sessions[id].session;
   });
-}
+};
+
+SessionManager.prototype.getById = function(sessionId){
+  return this._sessions[sessionId];
+};
 
 var sessionManager = new SessionManager();
 
@@ -158,6 +162,17 @@ module.exports = {
     });
 
     session.save(cb);
+  },
+
+  get: function(options, cb){
+    var sessionId = options.sessionId;
+
+    var activeSession = sessionManager.getById(sessionId);
+    if (activeSession){
+      cb(null, activeSession.session);
+    } else {
+      Session.findOne({ _id: sessionId }, cb);
+    }
   },
 
   // Return all current socket sessions as array

@@ -1,5 +1,7 @@
 var mongoose = require('mongoose');
 
+var Message = require('./Message')
+
 var validTypes = [
   'Math', 'Counseling'
 ];
@@ -28,10 +30,7 @@ var sessionSchema = new mongoose.Schema({
     }
   },
 
-  messages: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Messages'
-  }],
+  messages: [Message.schema],
   // whiteboardImg: Buffer,
 
 
@@ -52,7 +51,20 @@ var sessionSchema = new mongoose.Schema({
 });
 
 sessionSchema.methods.saveMessage = function(messageObj, cb){
+  this.messages.push({
+    user: messageObj.user._id,
+    contents: messageObj.contents
+  });
 
+  var messageId = this.messages[this.messages.length - 1]._id;
+  this.save(function(err, session){
+    var savedMessageIndex = session.messages.findIndex(function(message){
+      return message._id === messageId
+    });
+
+    var savedMessage = session.messages[savedMessageIndex];
+    cb(null, savedMessage);
+  });
 };
 
 //

@@ -11,10 +11,6 @@ module.exports = function(app){
   var server = http.createServer(app);
   var io = socket(server);
 
-  var activeSessions = {},   // id => Session
-      sessionUsers = {},     // id => [User]
-      _sessionSockets = {}; // id => socket
-
   io.on('connection', function(socket){
 
     // Session management
@@ -32,6 +28,7 @@ module.exports = function(app){
           socket.join(data.sessionId);
           console.log('Session joined:', session._id);
           io.emit('sessions', SessionCtrl.getSocketSessions());
+          io.to(session._id).emit('user-joined', session);
         }
       })
     });
@@ -59,17 +56,23 @@ module.exports = function(app){
 
     socket.on('message', function(data) {
       if (!data.sessionId) return;
-      console.log('SENDING MESSAGE');
-      var session = activeSessions[data.sessionId];
+
       var message = {
-        senderName: data.senderName,
-        timeStamp: data.timeStamp,
-        message: data.message
+        user: data.user,
+        contents: data.message
       };
 
-      session.sendMessage(message, function(){
-        io.to(data.sessionId).emit('messageSend', message);
-      })
+      SessionCtrl.get({
+        sessionId: data.sessionId
+      }, function(err, session){
+        session.saveMessage(message, function(err, savedMessage){
+          io.to(data.sessionId).emit('messageSend', {
+            contents: savedMessage.contents,
+            name: data.user.name,
+            time: savedMessage.createdAt
+          });
+        })
+      });
     });
 
     // Whiteboard interaction

@@ -22,4 +22,28 @@ module.exports = function(router){
 				}
 			});
 		});
+
+	router.route('/session/check')
+		.post(function(req, res){
+			var data = req.body || {},
+					sessionId = data.sessionId;
+
+			SessionCtrl.get({
+				sessionId: sessionId
+			}, function(err, session){
+				if (err){
+					res.json({
+						err: err
+					});
+				} else if (!session) {
+					res.json({
+						err: 'No session found'
+					});
+				} else {
+					res.json({
+						sessionId: session._id
+					});
+				}
+			});
+		});
 };
