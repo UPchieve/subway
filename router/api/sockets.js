@@ -30,7 +30,7 @@ module.exports = function(app){
           io.emit('error', err);
         } else {
           socket.join(data.sessionId);
-          console.log('Session joined:', session);
+          console.log('Session joined:', session._id);
           io.emit('sessions', SessionCtrl.getSocketSessions());
         }
       })
@@ -41,13 +41,13 @@ module.exports = function(app){
 
       SessionCtrl.leaveSession({
         socket: socket
-      }, function(err, session){
+      }, function(err, sessionId){
         if (err){
           console.log('Error leaving session', err);
-        } else if (session){
-          console.log('Left session', session._id)
-          socket.leave(session._id);
-          io.emit('sessions', SessionCtrl.getSocketSessions());  
+        } else if (sessionId){
+          console.log('Left session', sessionId)
+          socket.leave(sessionId);
+          io.emit('sessions', SessionCtrl.getSocketSessions());
         }
       });
     });

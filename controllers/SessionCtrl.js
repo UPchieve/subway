@@ -14,7 +14,7 @@ SocketSession.prototype.join = function(options){
   var user = options.user,
       socket = options.socket;
 
-  var userIndex = this.users.indexOf(function(joinedUser){
+  var userIndex = this.users.findIndex(function(joinedUser){
     return joinedUser._id === user._id
   });
 
@@ -41,7 +41,9 @@ SocketSession.prototype.leave = function(socket){
     }
   }, this);
 
-  var userIndex = this.users.indexOf(function(joinedUser){
+  console.log('User', userId, 'leaving from', this.session._id);
+
+  var userIndex = this.users.findIndex(function(joinedUser){
     return joinedUser._id === userId
   });
 
@@ -59,7 +61,7 @@ SocketSession.prototype.hasSocket = function(socket){
 };
 
 SocketSession.prototype.isDead = function(){
-  return this.users.length > 0;
+  return this.users.length === 0;
 };
 
 var SessionManager = function(){
@@ -82,34 +84,48 @@ SessionManager.prototype.connect = function(options){
     user: user,
     socket: socket
   });
+
+  return true;
 }
 
 SessionManager.prototype.disconnect = function(options){
   var socket = options.socket;
 
-  var session;
+  var socketSession,
+      sessionId;
   Object.keys(this._sessions).some(function(sessionId){
-    var socketSession = this._sessions[sessionId];
-    if (socketSession.hasSocket(socket)){
-      session = socketSession;
+    var s = this._sessions[sessionId];
+    if (s.hasSocket(socket)){
+      socketSession = s;
       return true;
     }
   }, this);
 
-  if (session){
-    session.leave(socket);
+  if (socketSession){
+    sessionId = socketSession.session._id;
+    socketSession.leave(socket);
   } else {
-    console.log('!!! no session found on disconnect')
+    console.log('!!! no socketSession found on disconnect')
   }
 
-  return session;
+  return sessionId;
 }
 
 // A dead session is a session with no connected to it
 SessionManager.prototype.pruneDeadSessions = function(){
-  this._sessions = this._sessions.filter(function(socketSession){
-    return !socketSession.isDead();
-  })
+
+  var activeSessions = Object.keys(this._sessions)
+    // Filter out inactive sessionIds
+    .filter(function(sessionId){
+      var socketSession = this._sessions[sessionId]
+      console.log(socketSession.session._id, 'socketSession.isDead() => ', socketSession.isDead())
+      return !socketSession.isDead();
+    }, this)
+    .map(function(activeSessionId){
+      return this._sessions[activeSessionId];
+    }, this);
+
+  this._sessions = activeSessions;
 };
 
 SessionManager.prototype.list = function(){
@@ -179,6 +195,8 @@ module.exports = {
             }
             cb(err, session);
           })
+        } else {
+          cb('Could not add socket')
         }
       });
   },
@@ -186,11 +204,13 @@ module.exports = {
   leaveSession: function(options, cb){
     var socket = options.socket;
 
-    var session = sessionManager.disconnect({
+    var sessionId = sessionManager.disconnect({
       socket: socket
     });
 
-    cb(null, session);
+    sessionManager.pruneDeadSessions();
+
+    cb(null, sessionId);
   },
 
   // Get list of all sessions that are not ended, with recent activity
