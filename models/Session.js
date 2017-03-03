@@ -19,7 +19,6 @@ var sessionSchema = new mongoose.Schema({
     type: String,
     validate: {
       validator: function(v){
-        'use strict';
         var type = v.toLowerCase();
         return validTypes.some(function(validType){
           return validType.toLowerCase() === type;
@@ -53,7 +52,35 @@ var sessionSchema = new mongoose.Schema({
 });
 
 sessionSchema.methods.saveMessage = function(messageObj, cb){
-  'use strict';
+
+};
+
+//
+sessionSchema.methods.joinUser = function(user, cb){
+  if (user.isVolunteer){
+    this.volunteer = user;
+  } else {
+    this.student = user;
+  }
+  this.save(cb);
+
+};
+
+sessionSchema.methods.leaveUser = function(user, cb){
+  if (user.isVolunteer){
+    this.volunteer = null;
+  } else {
+    this.student = null;
+  }
+  this.save(cb);
+};
+
+sessionSchema.methods.isActive = function(cb){
+
+};
+
+
+sessionSchema.methods.isWaiting = function(cb){
 
 };
 

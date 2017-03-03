@@ -22,14 +22,16 @@ module.exports = function(app){
       console.log('Joining session...', data.sessionId);
       SessionCtrl.joinSession({
         sessionId: data.sessionId,
-        user: data.user
+        user: data.user,
+        socket: socket
       }, function(err, session){
-        if (!err){
-          activeSessions[session._id] = session;
-          _sessionSockets[session._id] = socket;
+        if (err){
+          console.log('Could not join session');
+          io.emit('error', err);
+        } else {
           socket.join(data.sessionId);
           console.log('Session joined:', session);
-          io.emit('sessions', activeSessions);
+          io.emit('sessions', SessionCtrl.getSocketSessions());
         }
       })
     });
@@ -37,32 +39,21 @@ module.exports = function(app){
     socket.on('disconnect', function(){
       console.log('Client disconnected');
 
-      var sessionId;
-
-      Object.keys(_sessionSockets).some(function(id){
-        if (_sessionSockets[id] === socket){
-          sessionId = id;
-          return true;
+      SessionCtrl.leaveSession({
+        socket: socket
+      }, function(err, session){
+        if (err){
+          console.log('Error leaving session', err);
+        } else if (session){
+          console.log('Left session', session._id)
+          socket.leave(session._id);
+          io.emit('sessions', SessionCtrl.getSocketSessions());  
         }
       });
-
-      var session = activeSessions[sessionId];
-      SessionCtrl.leaveSession({
-        session: session,
-
-      })
-
-      delete activeSessions[sessionId];
-      delete _sessionSockets[sessionId];
-      socket.leave(sessionId);
-      io.emit('sessions', activeSessions);
     });
 
     socket.on('list', function(){
-      var sessions = Object.keys(activeSessions).map(function(id){
-        return activeSessions[id];
-      });
-      io.emit('sessions', activeSessions);
+      io.emit('sessions', SessionCtrl.getSocketSessions());
     });
 
 
