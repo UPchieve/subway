@@ -28,7 +28,7 @@ module.exports = function(app){
           socket.join(data.sessionId);
           console.log('Session joined:', session._id);
           io.emit('sessions', SessionCtrl.getSocketSessions());
-          io.to(session._id).emit('user-joined', session);
+          io.to(session._id).emit('session-change', session);
         }
       })
     });
@@ -38,12 +38,13 @@ module.exports = function(app){
 
       SessionCtrl.leaveSession({
         socket: socket
-      }, function(err, sessionId){
+      }, function(err, session){
         if (err){
           console.log('Error leaving session', err);
-        } else if (sessionId){
-          console.log('Left session', sessionId)
-          socket.leave(sessionId);
+        } else if (session){
+          console.log('Left session', session._id)
+          socket.leave(session._id);
+          io.to(session._id).emit('session-change', session);
           io.emit('sessions', SessionCtrl.getSocketSessions());
         }
       });
@@ -69,6 +70,7 @@ module.exports = function(app){
           io.to(data.sessionId).emit('messageSend', {
             contents: savedMessage.contents,
             name: data.user.name,
+            picture: data.user.picture,
             time: savedMessage.createdAt
           });
         })

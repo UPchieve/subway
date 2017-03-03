@@ -92,7 +92,7 @@ SessionManager.prototype.disconnect = function(options){
   var socket = options.socket;
 
   var socketSession,
-      sessionId;
+      session;
   Object.keys(this._sessions).some(function(sessionId){
     var s = this._sessions[sessionId];
     if (s.hasSocket(socket)){
@@ -102,13 +102,13 @@ SessionManager.prototype.disconnect = function(options){
   }, this);
 
   if (socketSession){
-    sessionId = socketSession.session._id;
+    session = socketSession.session;
     socketSession.leave(socket);
   } else {
     console.log('!!! no socketSession found on disconnect')
   }
 
-  return sessionId;
+  return session;
 }
 
 // A dead session is a session with no connected to it
@@ -186,46 +186,44 @@ module.exports = {
         user = options.user,
         socket = options.socket;
 
-    Session.findOne({ _id: sessionId })
-      .populate('student volunteer')
-      .exec(function(err, session){
-        if (err){
-          return cb(err)
-        } else if (!session){
-          return cb('No session found!');
-        }
+    Session.findOne({ _id: sessionId }, function(err, session){
+      if (err){
+        return cb(err)
+      } else if (!session){
+        return cb('No session found!');
+      }
 
-        var addedSocket = sessionManager.connect({
-          session: session,
-          user: user,
-          socket: socket
-        });
-
-        if (addedSocket){
-          session.joinUser(user, function(err){
-            if (err){
-              sessionManager.disconnect({
-                socket: socket
-              });
-            }
-            cb(err, session);
-          })
-        } else {
-          cb('Could not add socket')
-        }
+      var addedSocket = sessionManager.connect({
+        session: session,
+        user: user,
+        socket: socket
       });
+
+      if (addedSocket){
+        session.joinUser(user, function(err, savedSession){
+          if (err){
+            sessionManager.disconnect({
+              socket: socket
+            });
+          }
+          Session.populate(savedSession, 'student volunteer', cb);
+        })
+      } else {
+        cb('Could not add socket')
+      }
+    });
   },
 
   leaveSession: function(options, cb){
     var socket = options.socket;
 
-    var sessionId = sessionManager.disconnect({
+    var session = sessionManager.disconnect({
       socket: socket
     });
 
     sessionManager.pruneDeadSessions();
 
-    cb(null, sessionId);
+    cb(null, session);
   },
 
   // Get list of all sessions that are not ended, with recent activity
