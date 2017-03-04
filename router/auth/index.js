@@ -112,6 +112,8 @@ module.exports = function(app){
       });
     }
 
+// Uncomment if more information is needed for registration
+/*
     if (!firstname || !lastname) {
       return res.json({
         err: 'Must supply a first name and last name for registration'
@@ -147,6 +149,7 @@ module.exports = function(app){
         err: 'Please use valid birth date (e.g. 01/01/1970)'
       });
     }
+*/
 
     // Verify password for registration
     if (password.length < 8) {
