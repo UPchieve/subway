@@ -28,6 +28,7 @@ module.exports = function(app){
         } else {
           socket.join(data.sessionId);
           console.log('Session joined:', session._id);
+          console.log(session);
           io.emit('sessions', SessionCtrl.getSocketSessions());
           io.to(session._id).emit('session-change', session);
         }

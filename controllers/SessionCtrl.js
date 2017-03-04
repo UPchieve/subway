@@ -79,13 +79,13 @@ SessionManager.prototype.connect = function(options){
       session: session
     });
     this._sessions[session._id] = socketSession
+  } else {
+    socketSession.session = session;
   }
   socketSession.join({
     user: user,
     socket: socket
   });
-
-  return true;
 }
 
 SessionManager.prototype.disconnect = function(options){
@@ -131,6 +131,7 @@ SessionManager.prototype.pruneDeadSessions = function(){
 SessionManager.prototype.list = function(){
   var sessions = this._sessions;
   return Object.keys(sessions).map(function(id){
+    console.log(sessions[id].session);
     return sessions[id].session;
   });
 };
@@ -222,24 +223,21 @@ module.exports = {
         return cb('No session found!');
       }
 
-      var addedSocket = sessionManager.connect({
-        session: session,
-        user: user,
-        socket: socket
+      session.joinUser(user, function(err, savedSession){
+        if (err){
+          sessionManager.disconnect({
+            socket: socket
+          });
+        }
+        Session.populate(savedSession, 'student volunteer', function(err, populatedSession){
+          sessionManager.connect({
+            session: session,
+            user: user,
+            socket: socket
+          });
+          cb(err, populatedSession);
+        });
       });
-
-      if (addedSocket){
-        session.joinUser(user, function(err, savedSession){
-          if (err){
-            sessionManager.disconnect({
-              socket: socket
-            });
-          }
-          Session.populate(savedSession, 'student volunteer', cb);
-        })
-      } else {
-        cb('Could not add socket')
-      }
     });
   },
 
