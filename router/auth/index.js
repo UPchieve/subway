@@ -71,6 +71,7 @@ module.exports = function(app){
         var user = new User();
         user.email = email;
         user.isVolunteer = data.volunteerCode === true;
+        user.registrationCode = code;
 
         user.hashPassword(password, function(err, hash){
           user.password = hash; // Note the salt is embedded in the final hash

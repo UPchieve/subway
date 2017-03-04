@@ -23,6 +23,7 @@ var userSchema = new mongoose.Schema({
     default: false
   },
   verificationToken: String,
+  registrationCode: String,
 
   name: {
     type: String,
@@ -94,7 +95,7 @@ userSchema.methods.verifyPassword = function(candidatePassword, cb){
 // Static method to determine if a registration code is valid
 userSchema.statics.checkCode = function(code, cb){
   var studentCodes = [
-    'UPCHIEVE2017', 'BELIEVEACHIEVE'
+    'UPBOUND', 'UPCHIEVE2017'
   ];
 
   var volunteerCodes = [
@@ -107,8 +108,6 @@ userSchema.statics.checkCode = function(code, cb){
   var isVolunteerCode = volunteerCodes.some(function(volunteerCode){
     return volunteerCode.toUpperCase() === code.toUpperCase();
   });
-
-  console.log(isStudentCode, isVolunteerCode);
 
   if (isStudentCode || isVolunteerCode){
     cb(null, {
