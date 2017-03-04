@@ -15,6 +15,7 @@ module.exports = function(app){
 
     // Session management
     socket.on('join', function(data){
+      if (!data || !data.sessionId) return;
       console.log('Joining session...', data.sessionId);
       SessionCtrl.joinSession({
         sessionId: data.sessionId,
@@ -80,6 +81,7 @@ module.exports = function(app){
     // Whiteboard interaction
 
     socket.on('drawClick', function(data) {
+      if (!data || !data.sessionId) return;
       io.to(data.sessionId).emit('draw', {
         x: data.x,
         y: data.y,
@@ -88,26 +90,32 @@ module.exports = function(app){
     });
 
     socket.on('saveImage', function(data) {
+      if (!data || !data.sessionId) return;
       io.in(data.sessionId).emit('save');
     });
 
     socket.on('undoClick', function(data) {
+      if (!data || !data.sessionId) return;
       io.in(data.sessionId).emit('undo');
     });
 
     socket.on('clearClick', function(data) {
+      if (!data || !data.sessionId) return;
       io.to(data.sessionId).emit('clear');
     });
 
     socket.on('changeColor', function(data) {
-      io.in(data.sessionId).emit('color', data);
+      if (!data || !data.sessionId) return;
+      io.in(data.sessionId).emit('color', data.color);
     });
 
     socket.on('changeWidth', function(data) {
-      io.in(data.sessionId).emit('width', data);
+      if (!data || !data.sessionId) return;
+      io.in(data.sessionId).emit('width', data.width);
     });
 
     socket.on('dragStart', function(data) {
+      if (!data || !data.sessionId) return;
       io.in(data.sessionId).emit('dstart', {
         x: data.x,
         y: data.y,
@@ -116,6 +124,7 @@ module.exports = function(app){
     });
 
     socket.on('dragAction', function(data) {
+      if (!data || !data.sessionId) return;
       io.in(data.sessionId).emit('drag', {
         x: data.x,
         y: data.y,
@@ -124,6 +133,7 @@ module.exports = function(app){
     });
 
     socket.on('dragEnd', function(data) {
+      if (!data || !data.sessionId) return;
       io.to(data.sessionId).emit('dend', {
         x: data.x,
         y: data.y,
@@ -132,6 +142,7 @@ module.exports = function(app){
     });
 
     socket.on('insertText', function(data) {
+      if (!data || !data.sessionId) return;
       io.to(data.sessionId).emit('text', {
         text: data.text,
         x: data.x,
