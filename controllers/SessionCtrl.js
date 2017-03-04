@@ -139,6 +139,35 @@ SessionManager.prototype.getById = function(sessionId){
   return this._sessions[sessionId];
 };
 
+SessionManager.prototype.getUserBySocket = function(socket){
+  var socketSession;
+  Object.keys(this._sessions).some(function(sessionId){
+    var s = this._sessions[sessionId];
+    if (s.hasSocket(socket)){
+      socketSession = s;
+      return true;
+    }
+  }, this);
+
+  if (!socketSession){
+    return false;
+  }
+
+  var userId;
+  Object.keys(socketSession.sockets).some(function(joinedUserId){
+    if (socketSession.sockets[joinedUserId] === socket){
+      userId = joinedUserId;
+      return true;
+    }
+  });
+
+  var userIndex = socketSession.users.findIndex(function(joinedUser){
+    return joinedUser._id === userId
+  });
+
+  return socketSession.users[userIndex];
+};
+
 var sessionManager = new SessionManager();
 
 module.exports = {
@@ -217,13 +246,19 @@ module.exports = {
   leaveSession: function(options, cb){
     var socket = options.socket;
 
+    var user = sessionManager.getUserBySocket(socket);
+
     var session = sessionManager.disconnect({
       socket: socket
     });
 
     sessionManager.pruneDeadSessions();
 
-    cb(null, session);
+    if (user){
+      session.leaveUser(user, cb);
+    } else {
+      cb(null, session);
+    }
   },
 
   // Get list of all sessions that are not ended, with recent activity
