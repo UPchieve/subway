@@ -82,7 +82,7 @@ module.exports = function(app){
 
     socket.on('drawClick', function(data) {
       if (!data || !data.sessionId) return;
-      io.to(data.sessionId).emit('draw', {
+      socket.broadcast.to(data.sessionId).emit('draw', {
         x: data.x,
         y: data.y,
         type: data.type
@@ -91,7 +91,7 @@ module.exports = function(app){
 
     socket.on('saveImage', function(data) {
       if (!data || !data.sessionId) return;
-      io.in(data.sessionId).emit('save');
+      socket.broadcast.to(data.sessionId).emit('save');
     });
 
     socket.on('undoClick', function(data) {
@@ -106,17 +106,17 @@ module.exports = function(app){
 
     socket.on('changeColor', function(data) {
       if (!data || !data.sessionId) return;
-      io.in(data.sessionId).emit('color', data.color);
+        socket.broadcast.to(data.sessionId).emit('color', data.color);
     });
 
     socket.on('changeWidth', function(data) {
       if (!data || !data.sessionId) return;
-      io.in(data.sessionId).emit('width', data.width);
+      socket.broadcast.to(data.sessionId).emit('width', data.width);
     });
 
     socket.on('dragStart', function(data) {
       if (!data || !data.sessionId) return;
-      io.in(data.sessionId).emit('dstart', {
+      socket.broadcast.to(data.sessionId).emit('dstart', {
         x: data.x,
         y: data.y,
         color:data.color
@@ -125,7 +125,7 @@ module.exports = function(app){
 
     socket.on('dragAction', function(data) {
       if (!data || !data.sessionId) return;
-      io.in(data.sessionId).emit('drag', {
+      socket.broadcast.to(data.sessionId).emit('drag', {
         x: data.x,
         y: data.y,
         color:data.color
@@ -134,7 +134,7 @@ module.exports = function(app){
 
     socket.on('dragEnd', function(data) {
       if (!data || !data.sessionId) return;
-      io.to(data.sessionId).emit('dend', {
+      socket.broadcast.to(data.sessionId).emit('dend', {
         x: data.x,
         y: data.y,
         color:data.color
