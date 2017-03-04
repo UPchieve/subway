@@ -6,7 +6,15 @@ module.exports = {
 	sessionSecret: process.env.SESSION_SECRET || 'PoKtSuRS2phosxZRV9XEVS9hVyMTzSyB',
 	saltRounds: 10,
 	mail: {
-		auth: 'smtps://user:password@smtp.example.com',
+		smtpConfig: {
+			host: '',
+			port: 465,
+			auth: {
+				user: '',
+				pass: ''
+			},
+			secure: true
+		},
 		senders: {
 			noreply: 'noreply@example.com'
 		}
