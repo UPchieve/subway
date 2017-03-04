@@ -1,4 +1,4 @@
-# BelieveAchieve web server
+# UPchieve web server
 
 > Web server providing endpoints for the BelieveAchieve web client
 
