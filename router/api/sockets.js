@@ -97,7 +97,7 @@ module.exports = function(app){
 
     socket.on('undoClick', function(data) {
       if (!data || !data.sessionId) return;
-      io.in(data.sessionId).emit('undo');
+      socket.broadcast.to(data.sessionId).emit('undo');
     });
 
     socket.on('clearClick', function(data) {
