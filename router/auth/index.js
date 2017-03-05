@@ -72,10 +72,10 @@ module.exports = function(app){
     var numLower = 0;
     var numNumber = 0;
     for (var i = 0; i < password.length; i++) {
-      if (password[i].toUppercase() == password[i]) {
+      if (password[i].toUpperCase() == password[i]) {
         numUpper += 1;
       }
-      else if (password[i].toLowercase() == password[i]) {
+      else if (password[i].toLowerCase() == password[i]) {
         numLower += 1;
       }
       else if (!isNaN(password[i])) {
