@@ -20,8 +20,16 @@ module.exports = function(router){
 		UserCtrl.update({
 			userId: req.user._id,
 			data: {
-				name: data.name,
-				picture: data.picture
+				year: data.year,
+				month: data.month,
+				day: data.day,
+				email: data.email,
+				picture: data.picture,
+				race: data.race,
+				highschool: data.highschool,
+				subject: data.subject,
+				firstname: data.firstname,
+				lastname: data.lastname,
 			}
 		}, function(err, user){
 			if (err){
@@ -30,18 +38,6 @@ module.exports = function(router){
 				res.json({
 					user: user
 				});
-			}
-		});
-	});
-
-	router.get('/user/:id', function(req, res){
-		UserCtrl.get({
-			userId: req.params.id
-		}, function(err, profile){
-			if (err){
-				res.json({err: err});
-			} else {
-				res.json(profile);
 			}
 		});
 	});

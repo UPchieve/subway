@@ -25,8 +25,44 @@ var userSchema = new mongoose.Schema({
   verificationToken: String,
   registrationCode: String,
 
-  name: {
+  firstname: {
     type: String,
+    required: true,
+    default: ''
+  },
+  lastname: {
+    type: String,
+    required: true,
+    default: ''
+  },
+  race: {
+    type: String,
+    required: true,
+    default: ''
+  },
+  highschool: {
+    type: String,
+    required: true,
+    default: ''
+  },
+  subject: {
+    type: String,
+    required: true,
+    default: ''
+  },
+  year: {
+    type: Number,
+    required: true,
+    default: ''
+  },
+  month: {
+    type: Number,
+    required: true,
+    default: ''
+  },
+  day: {
+    type: Number,
+    required: true,
     default: ''
   },
   picture: {

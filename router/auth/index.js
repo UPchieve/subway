@@ -1,5 +1,6 @@
 var express = require('express');
 var session = require('express-session');
+var flash = require('express-flash');
 var passport = require('passport');
 var MongoStore = require('connect-mongo')(session);
 
@@ -12,6 +13,7 @@ module.exports = function(app){
   console.log('Auth module');
 
   require('./passport');
+
   app.use(session({
     resave: true,
     saveUninitialized: true,
@@ -23,6 +25,7 @@ module.exports = function(app){
   }));
   app.use(passport.initialize());
   app.use(passport.session());
+  app.use(flash());
 
   var router = new express.Router();
 
@@ -57,6 +60,46 @@ module.exports = function(app){
         err: 'Must provide a code to register'
       });
     }
+
+    // Verify password for registration
+    if (password.length < 8) {
+      return res.json({
+        err: 'Password must be 8 characters or longer'
+      });
+    }
+
+    var numUpper = 0;
+    var numLower = 0;
+    var numNumber = 0;
+    for (var i = 0; i < password.length; i++) {
+      if (password[i].toUppercase() == password[i]) {
+        numUpper += 1;
+      }
+      else if (password[i].toLowercase() == password[i]) {
+        numLower += 1;
+      }
+      else if (!isNaN(password[i])) {
+        numNumber += 1;
+      }
+    }
+    if (numUpper == 0) {
+      return res.json({
+        err: 'Password must contain at least one uppercase letter'
+      });
+    }
+    if (numLower == 0) {
+      return res.json({
+        err: 'Password must contain at least one lowercase letter'
+      });
+    }
+    if (numNumber == 0) {
+      return res.json({
+        err: 'Password must contain at least one number'
+      });
+    }
+
+    var user = new User();
+    user.email = email,
 
     User.checkCode(code, function(err, data){
       if (err){
