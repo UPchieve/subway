@@ -25,7 +25,7 @@ module.exports = function(router){
 				day: data.day,
 				email: data.email,
 				picture: data.picture,
-				picture: data.race,
+				race: data.race,
 				highschool: data.highschool,
 				subject: data.subject,
 				firstname: data.firstname,
@@ -38,46 +38,6 @@ module.exports = function(router){
 				res.json({
 					user: user
 				});
-			}
-		});
-	});
-
-	router.get('/user', function(req, res){
-		UserCtrl.get({
-			userId: req.params.id
-		}, 
-		UserCtrl.get({
-			picture: req.params.picture
-		}, 
-		UserCtrl.get({
-			firstname: req.params.firstname
-		},
-		UserCtrl.get({
-			lastname: req.params.lastname
-		},
-		UserCtrl.get({
-			email: req.params.email
-		}, 
-		UserCtrl.get({
-			year: req.params.year
-		},
-		UserCtrl.get({
-			month: req.params.month
-		}, 
-		UserCtrl.get({
-			day: req.params.day
-		}, 
-		UserCtrl.get({
-			race: req.params.race
-		}, 
-		UserCtrl.get({
-			highschool: req.params.highscool
-		}, 
-		function(err, profile){
-			if (err){
-				res.json({err: err});
-			} else {
-				res.json(profile);
 			}
 		});
 	});

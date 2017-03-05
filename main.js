@@ -10,7 +10,7 @@ var cors = require('cors');
 var mongoose = require('mongoose');
 
 // Configuration
-var config = require('./config/server');
+var config = require('./config');
 
 // Database
 mongoose.connect(config.database);
@@ -28,6 +28,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser(config.sessionSecret));
+app.use(express.static(path.join(__dirname, 'dist')));
 app.use(busboy());
 app.use(cors({
 	origin: true,

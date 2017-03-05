@@ -2,6 +2,8 @@ var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
 var validator = require('validator');
 
+var config = require('../config.js');
+
 var userSchema = new mongoose.Schema({
   email: {
     type: String,
@@ -21,6 +23,7 @@ var userSchema = new mongoose.Schema({
     default: false
   },
   verificationToken: String,
+  registrationCode: String,
 
   firstname: {
     type: String,
@@ -101,6 +104,16 @@ userSchema.methods.getProfile = function(cb){
   cb(null, this.parseProfile());
 };
 
+userSchema.methods.hashPassword = function(password, cb){
+  bcrypt.genSalt(config.saltRounds, function(err, salt){
+    if (err){
+      cb(err);
+    } else {
+      bcrypt.hash(password, salt, cb);
+    }
+  });
+};
+
 userSchema.methods.verifyPassword = function(candidatePassword, cb){
   var user = this;
 
@@ -114,5 +127,32 @@ userSchema.methods.verifyPassword = function(candidatePassword, cb){
     }
   });
 };
+
+// Static method to determine if a registration code is valid
+userSchema.statics.checkCode = function(code, cb){
+  var studentCodes = [
+    'UPBOUND', 'UPCHIEVE2017'
+  ];
+
+  var volunteerCodes = [
+    'VOLUNTEER2017'
+  ];
+
+  var isStudentCode = studentCodes.some(function(studentCode){
+    return studentCode.toUpperCase() === code.toUpperCase();
+  });
+  var isVolunteerCode = volunteerCodes.some(function(volunteerCode){
+    return volunteerCode.toUpperCase() === code.toUpperCase();
+  });
+
+  if (isStudentCode || isVolunteerCode){
+    cb(null, {
+      studentCode: isStudentCode,
+      volunteerCode: isVolunteerCode
+    });
+  } else {
+    cb('Registration code is invalid', false);
+  }
+}
 
 module.exports = mongoose.model('User', userSchema);

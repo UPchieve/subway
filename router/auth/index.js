@@ -2,12 +2,11 @@ var express = require('express');
 var session = require('express-session');
 var flash = require('express-flash');
 var passport = require('passport');
-var bcrypt = require('bcrypt');
 var MongoStore = require('connect-mongo')(session);
 
 var VerificationCtrl = require('../../controllers/VerificationCtrl');
 
-var config = require('../../config/server.js');
+var config = require('../../config.js');
 var User = require('../../models/User.js');
 
 module.exports = function(app){
@@ -19,8 +18,10 @@ module.exports = function(app){
     resave: true,
     saveUninitialized: true,
     secret: config.sessionSecret,
-    store: new MongoStore({ url: config.database, autoReconnect: true }),
-    cookie: { httpOnly: false }
+    store: new MongoStore({ url: config.database, autoReconnect: true, collection: 'auth-sessions' }),
+    cookie: {
+      httpOnly: false
+    }
   }));
   app.use(passport.initialize());
   app.use(passport.session());
@@ -45,111 +46,20 @@ module.exports = function(app){
     }
   );
 
-  router.put('/changename', function(req, res){
-    var firstname = req.body.firstname
-        lastname = req.body.lastname
-
-      if (!firstname && !lastname){
-        return res.json({
-          err: 'No name to change'
-        });
-      }
-
-      .get(function(req, res){
-            if (req.user){
-                res.json({
-                    user: req.user
-                    user.firstname = firstname
-                    user.lastname = lastname
-                });
-            } else {
-                res.json({
-                    err: 'User does not exist'
-                });
-            }
-        });
-    }
-
-  router.post('/picture', function(req, res){
-    var picture = req.body.picture
-
-      if (!picture){
-        return res.json({
-          err: 'No picture URL given'
-        });
-      }
-
-      .get(function(req, res){
-            if (req.user){
-                res.json({
-                    user: req.user
-                    user.picture = picture
-                });
-            } else {
-                res.json({
-                    err: 'User does not exist'
-                });
-            }
-        });
-    }
   router.post('/register', function(req, res){
     var email = req.body.email,
-        firstname = req.body.firstname,
-        lastname = req.body.lastname,
-        race = req.body.race,
-        hs = req.body.hs,
-        subject = req.body.subject, // Difficult academic subject
         password = req.body.password,
-        // Birth date information
-        year = req.body.year,
-        month = req.body.month,
-        day = req.body.day;
-
+        code = req.body.code;
 
     if (!email || !password){
       return res.json({
         err: 'Must supply an email and password for registration'
       });
-    }
-
-// Uncomment if more information is needed for registration
-/*
-    if (!firstname || !lastname) {
+    } else if (!code){
       return res.json({
-        err: 'Must supply a first name and last name for registration'
+        err: 'Must provide a code to register'
       });
     }
-
-    if (!race) {
-      return res.json({
-        err: 'Must supply a race or ethnicity for registration'
-      });
-    }
-
-    if (!hs) {
-      return res.json({
-        err: 'Must supply a valid high school for registration'
-      });
-    }
-
-    if (!subject) {
-      return res.json({
-        err: 'Must supply a difficult academic subject for registration'
-      });
-    }
-    
-    // Verify valid birth date for registration
-    if (!year || !month || !day) {
-      return res.json({
-        err: 'Must supply a complete birth date for registration'
-      });
-    }
-    if (isNaN(year) || isNaN(month) || isNaN(day)) {
-      return res.json({
-        err: 'Please use valid birth date (e.g. 01/01/1970)'
-      });
-    }
-*/
 
     // Verify password for registration
     if (password.length < 8) {
@@ -190,40 +100,91 @@ module.exports = function(app){
 
     var user = new User();
     user.email = email,
-    user.firstname = firstname,
-    user.lastname = lastname,
-    user.race = race,
-    user.hs = hs,
-    user.subject = subject, // Difficult academic subject
-    // Birth date information
-    user.year = year,
-    user.month = month,
-    user.day = day;
 
-    bcrypt.genSalt(config.saltRounds, function(err, salt){
-      bcrypt.hash(password, salt, function(err, hash){
-        user.password = hash; // Note the salt is embedded in the final hash
+    User.checkCode(code, function(err, data){
+      if (err){
+        res.json({
+          err: err
+        });
+      } else if (!data.studentCode && !data.volunteerCode){
+        res.json({
+          err: 'Invalid registation code'
+        });
+      } else {
+        var user = new User();
+        user.email = email;
+        user.isVolunteer = data.volunteerCode === true;
+        user.registrationCode = code;
 
-        user.save(function(err){
+        user.hashPassword(password, function(err, hash){
+          user.password = hash; // Note the salt is embedded in the final hash
+
           if (err){
             res.json({
-              err: err
+              err: 'Could not hash password'
             });
-          } else {
-            VerificationCtrl.initiateVerification({
-              userId: user._id,
-              email: user.email
-            }, function(err, email){
-              if (err){
-                res.json({msg: 'Registration successful. Error sending verification email: ' + err});
-              } else {
-                res.json({msg: 'Registration successful. Verification email sent to ' + email});
-              }
-            });
+            return;
           }
-        })
-      })
+
+          user.save(function(err){
+            if (err){
+              res.json({
+                err: err
+              });
+            } else {
+
+              VerificationCtrl.initiateVerification({
+                userId: user._id,
+                email: user.email
+              }, function(err, email){
+                var msg;
+                if (err){
+                  msg = 'Registration successful. Error sending verification email: ' + err;
+                } else {
+                  msg = 'Registration successful. Verification email sent to ' + email;
+                }
+
+                req.login(user, function(err){
+                  if (err){
+                    res.json({
+                      msg: msg,
+                      err: err
+                    });
+                  } else {
+                    res.json({
+                      msg: msg,
+                      user: user
+                    });
+                  }
+                });
+              });
+            }
+          });
+        });
+      }
     })
+  });
+
+  router.post('/register/check', function(req, res){
+    var code = req.body.code;
+    console.log(code);
+    if (!code){
+      res.json({
+        err: 'No registration code given'
+      });
+      return;
+    }
+    User.checkCode(code, function(err, data){
+      if (err){
+        res.json({
+          err: err
+        });
+      } else {
+        res.json({
+          valid: data.studentCode || data.volunteerCode
+        });
+      }
+    });
   });
 
   app.use('/auth', router);

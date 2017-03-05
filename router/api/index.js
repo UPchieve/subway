@@ -8,7 +8,8 @@ module.exports = function(app){
 
 	require('./user')(router);
 	require('./verify')(router);
-	require('./whiteboard')(app);
+	require('./session')(router);
+	require('./sockets')(app);
 
 	app.use('/api', passport.isAuthenticated, router);
 };

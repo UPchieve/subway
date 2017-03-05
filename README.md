@@ -1,4 +1,4 @@
-# BelieveAchieve web server
+# UPchieve web server
 
 > Web server providing endpoints for the BelieveAchieve web client
 
@@ -8,11 +8,16 @@
 
 2. Clone repository
 
-3. In repository folder:
+3. Copy `config.example.js` to `config.js` and setup handle to database and SMTP server.
+
+4. In repository folder:
 
 ``` bash
 # install dependencies
 npm install
+
+# optionally, set session secret
+setenv SESSION_SECRET='secret'
 
 # start server on localhost:3000
 npm start
@@ -22,9 +27,9 @@ npm start
 
 The root folder of the repository provides the bootstrap file `main.js` and a package definitions file.
 
-### config
+### config.js
 
-`server.js` contains a map of configuration keys for running the server. All keys and sensitive information should be placed in this file.
+`config.js` contains a map of configuration keys for running the server. All keys and sensitive information should be placed in this file.
 
 ### models
 

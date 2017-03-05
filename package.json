@@ -1,5 +1,5 @@
 {
-  "name": "believe-achieve-server",
+  "name": "upchieve-server",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -23,6 +23,7 @@
     "nodemailer": "^2.7.0",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
+    "q": "^1.4.1",
     "socket.io": "^1.7.2",
     "validator": "^6.2.0"
   }
