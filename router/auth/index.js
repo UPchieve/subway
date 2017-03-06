@@ -72,16 +72,15 @@ module.exports = function(app){
     var numLower = 0;
     var numNumber = 0;
     for (var i = 0; i < password.length; i++) {
-      if (password[i].toUppercase() == password[i]) {
+      if (!isNaN(password[i])) {
+        numNumber += 1;
+      } else if (password[i].toUpperCase() == password[i]) {
         numUpper += 1;
-      }
-      else if (password[i].toLowercase() == password[i]) {
+      } else if (password[i].toLowerCase() == password[i]) {
         numLower += 1;
       }
-      else if (!isNaN(password[i])) {
-        numNumber += 1;
-      }
     }
+
     if (numUpper == 0) {
       return res.json({
         err: 'Password must contain at least one uppercase letter'
@@ -129,7 +128,7 @@ module.exports = function(app){
           user.save(function(err){
             if (err){
               res.json({
-                err: err
+                err: err.message
               });
             } else {
 

@@ -15,15 +15,21 @@ module.exports = {
     var userId = options.userId;
 
     var data = options.data || {},
-        name = data.name,
-        picture = data.picture,
-        update = {};
+        update = {},
+        hasUpdate = false;
 
-    if (name){
-      update.name = name;
-    }
-    if (picture){
-      update.picture = picture;
+    // Define and iterate through keys to add to update object
+    [
+      'name', 'picture', 'year', 'month', 'day', 'race', 'highschool', 'subject'
+    ].forEach(function(key){
+      if (data[key]){
+        update[key] = data[key];
+        hasUpdate = true;
+      }
+    });
+
+    if (!hasUpdate){
+      return callback('No fields defined to update');
     }
 
     User.findByIdAndUpdate(userId, update, { new: true }, function(err, user){

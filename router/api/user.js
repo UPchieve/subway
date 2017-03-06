@@ -20,16 +20,15 @@ module.exports = function(router){
 		UserCtrl.update({
 			userId: req.user._id,
 			data: {
+				firstname: data.firstname,
+				lastname: data.lastname,
+				picture: data.picture,
 				year: data.year,
 				month: data.month,
 				day: data.day,
-				email: data.email,
-				picture: data.picture,
 				race: data.race,
 				highschool: data.highschool,
-				subject: data.subject,
-				firstname: data.firstname,
-				lastname: data.lastname,
+				subject: data.subject
 			}
 		}, function(err, user){
 			if (err){

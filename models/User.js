@@ -25,51 +25,18 @@ var userSchema = new mongoose.Schema({
   verificationToken: String,
   registrationCode: String,
 
-  firstname: {
-    type: String,
-    required: true,
-    default: ''
-  },
-  lastname: {
-    type: String,
-    required: true,
-    default: ''
-  },
-  race: {
-    type: String,
-    required: true,
-    default: ''
-  },
-  highschool: {
-    type: String,
-    required: true,
-    default: ''
-  },
-  subject: {
-    type: String,
-    required: true,
-    default: ''
-  },
-  year: {
-    type: Number,
-    required: true,
-    default: ''
-  },
-  month: {
-    type: Number,
-    required: true,
-    default: ''
-  },
-  day: {
-    type: Number,
-    required: true,
-    default: ''
-  },
-  picture: {
-    type: String,
-    default: ''
-  },
+  // Profile data
+  firstname: String,
+  lastname: String,
+  picture: String,
+  race: String,
+  highschool: String,
+  subject: String,
+  year: Number,
+  month: Number,
+  day: Number,
 
+  // User status
   isVolunteer: {
     type: Boolean,
     default: false
