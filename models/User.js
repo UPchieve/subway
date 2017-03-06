@@ -59,6 +59,8 @@ userSchema.methods.parseProfile = function(){
     _id: this._id,
     email: this.email,
     verified: this.verified,
+    firstname: this.firstname,
+    lastname: this.lastname,
     picture: this.picture,
     isVolunteer: this.isVolunteer,
     isAdmin: this.isAdmin,

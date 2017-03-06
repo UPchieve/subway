@@ -20,7 +20,7 @@ module.exports = {
 
     // Define and iterate through keys to add to update object
     [
-      'name', 'picture', 'year', 'month', 'day', 'race', 'highschool', 'subject'
+      'firstname', 'lastname', 'picture', 'year', 'month', 'day', 'race', 'highschool', 'subject'
     ].forEach(function(key){
       if (data[key]){
         update[key] = data[key];
