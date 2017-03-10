@@ -28,13 +28,16 @@ var userSchema = new mongoose.Schema({
   // Profile data
   firstname: String,
   lastname: String,
+  serviceInterests: [String],
   picture: String,
-  race: String,
-  highschool: String,
-  subject: String,
   year: Number,
   month: Number,
   day: Number,
+  gender: String,
+  race: [String],
+  groupIdentification: [String],
+  computerAccess: [String],
+  preferredTimes: [String],
 
   // User status
   isVolunteer: {
@@ -64,7 +67,17 @@ userSchema.methods.parseProfile = function(){
     picture: this.picture,
     isVolunteer: this.isVolunteer,
     isAdmin: this.isAdmin,
-    createdAt: this.createdAt
+    createdAt: this.createdAt,
+
+    day: this.day,
+    month: this.month,
+    year: this.year,
+    serviceInterests: this.serviceInterests,
+    gender: this.gender,
+    race: this.race,
+    groupIdentification: this.groupIdentification,
+    computerAccess: this.computerAccess,
+    preferredTimes: this.preferredTimes
   };
 };
 

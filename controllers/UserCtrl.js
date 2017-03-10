@@ -20,7 +20,8 @@ module.exports = {
 
     // Define and iterate through keys to add to update object
     [
-      'firstname', 'lastname', 'picture', 'year', 'month', 'day', 'race', 'highschool', 'subject'
+      'firstname', 'lastname', 'picture', 'year', 'month', 'day', 'serviceInterests', 'gender', 'race',
+      'groupIdentification', 'computerAccess', 'preferredTimes'
     ].forEach(function(key){
       if (data[key]){
         update[key] = data[key];
@@ -39,5 +40,5 @@ module.exports = {
         user.getProfile(callback);
       }
     });
-  },
+  }
 };

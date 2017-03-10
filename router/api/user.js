@@ -26,9 +26,12 @@ module.exports = function(router){
 				year: data.year,
 				month: data.month,
 				day: data.day,
+				serviceInterests: data.serviceInterests,
+				gender: data.gender,
 				race: data.race,
-				highschool: data.highschool,
-				subject: data.subject
+				groupIdentification: data.groupIdentification,
+				computerAccess: data.computerAccess,
+				preferredTimes: data.preferredTimes
 			}
 		}, function(err, user){
 			if (err){
