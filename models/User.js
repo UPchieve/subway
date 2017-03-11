@@ -30,14 +30,30 @@ var userSchema = new mongoose.Schema({
   lastname: String,
   serviceInterests: [String],
   picture: String,
-  year: Number,
-  month: Number,
-  day: Number,
+  birthdate: String,
   gender: String,
   race: [String],
   groupIdentification: [String],
   computerAccess: [String],
   preferredTimes: [String],
+
+  highschool: String,
+  currentGrade: String,
+  expectedGraduation: String,
+  difficultAcademicSubject: String,
+  difficultCollegeProcess: [String],
+  highestLevelEducation: [String],
+  hasGuidanceCounselor: String,
+
+  gpa: String,
+  collegeApplicationsText: String,
+  commonCollegeDocs: [String],
+  academicInterestsText: String,
+  testScoresText: String,
+  advancedCoursesText: String,
+  extracurricularActivitesText: String,
+
+
 
   // User status
   isVolunteer: {
@@ -69,15 +85,28 @@ userSchema.methods.parseProfile = function(){
     isAdmin: this.isAdmin,
     createdAt: this.createdAt,
 
-    day: this.day,
-    month: this.month,
-    year: this.year,
+    birthdate: this.birthdate,
     serviceInterests: this.serviceInterests,
     gender: this.gender,
     race: this.race,
     groupIdentification: this.groupIdentification,
     computerAccess: this.computerAccess,
-    preferredTimes: this.preferredTimes
+    preferredTimes: this.preferredTimes,
+
+    highschool: this.highschool,
+    currentGrade: this.currentGrade,
+    expectedGraduation: this.expectedGraduation,
+    difficultAcademicSubject: this.difficultAcademicSubject,
+    difficultCollegeProcess: this.difficultCollegeProcess,
+    highestLevelEducation: this.highestLevelEducation,
+    hasGuidanceCounselor: this.hasGuidanceCounselor,
+    gpa: this.gpa,
+    collegeApplicationsText: this.collegeApplicationsText,
+    commonCollegeDocs: this.commonCollegeDocs,
+    academicInterestsText: this.academicInterestsText,
+    testScoresText: this.testScoresText,
+    advancedCoursesText: this.advancedCoursesText,
+    extracurricularActivitesText: this.extracurricularActivitesText
   };
 };
 
