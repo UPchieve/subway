@@ -20,8 +20,30 @@ module.exports = function(router){
 		UserCtrl.update({
 			userId: req.user._id,
 			data: {
-				name: data.name,
-				picture: data.picture
+				firstname: data.firstname,
+				lastname: data.lastname,
+				picture: data.picture,
+				birthdate: data.birthdate,
+				serviceInterests: data.serviceInterests,
+				gender: data.gender,
+				race: data.race,
+				groupIdentification: data.groupIdentification,
+				computerAccess: data.computerAccess,
+				preferredTimes: data.preferredTimes,
+				highschool: data.highschool,
+				currentGrade: data.currentGrade,
+				expectedGraduation: data.expectedGraduation,
+				difficultAcademicSubject: data.difficultAcademicSubject,
+				difficultCollegeProcess: data.difficultCollegeProcess,
+				highestLevelEducation: data.highestLevelEducation,
+				hasGuidanceCounselor: data.hasGuidanceCounselor,
+				gpa: data.gpa,
+				collegeApplicationsText: data.collegeApplicationsText,
+				commonCollegeDocs: data.commonCollegeDocs,
+				academicInterestsText: data.academicInterestsText,
+				testScoresText: data.testScoresText,
+				advancedCoursesText: data.advancedCoursesText,
+				extracurricularActivitesText: data.extracurricularActivitesText
 			}
 		}, function(err, user){
 			if (err){
@@ -30,18 +52,6 @@ module.exports = function(router){
 				res.json({
 					user: user
 				});
-			}
-		});
-	});
-
-	router.get('/user/:id', function(req, res){
-		UserCtrl.get({
-			userId: req.params.id
-		}, function(err, profile){
-			if (err){
-				res.json({err: err});
-			} else {
-				res.json(profile);
 			}
 		});
 	});
