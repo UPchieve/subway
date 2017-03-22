@@ -105,6 +105,16 @@ module.exports = function(app){
       io.to(data.sessionId).emit('clear');
     });
 
+    socket.on('drawing', function(data) {
+      if (!data || !data.sessionId) return;
+      socket.broadcast.to(data.sessionId).emit('draw');
+    });
+
+    socket.on('end', function(data) {
+      if (!data || !data.sessionId) return;
+      socket.broadcast.to(data.sessionId).emit('end');
+    });
+
     socket.on('changeColor', function(data) {
       if (!data || !data.sessionId) return;
         socket.broadcast.to(data.sessionId).emit('color', data.color);
