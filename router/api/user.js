@@ -23,12 +23,27 @@ module.exports = function(router){
 				firstname: data.firstname,
 				lastname: data.lastname,
 				picture: data.picture,
-				year: data.year,
-				month: data.month,
-				day: data.day,
+				birthdate: data.birthdate,
+				serviceInterests: data.serviceInterests,
+				gender: data.gender,
 				race: data.race,
+				groupIdentification: data.groupIdentification,
+				computerAccess: data.computerAccess,
+				preferredTimes: data.preferredTimes,
 				highschool: data.highschool,
-				subject: data.subject
+				currentGrade: data.currentGrade,
+				expectedGraduation: data.expectedGraduation,
+				difficultAcademicSubject: data.difficultAcademicSubject,
+				difficultCollegeProcess: data.difficultCollegeProcess,
+				highestLevelEducation: data.highestLevelEducation,
+				hasGuidanceCounselor: data.hasGuidanceCounselor,
+				gpa: data.gpa,
+				collegeApplicationsText: data.collegeApplicationsText,
+				commonCollegeDocs: data.commonCollegeDocs,
+				academicInterestsText: data.academicInterestsText,
+				testScoresText: data.testScoresText,
+				advancedCoursesText: data.advancedCoursesText,
+				extracurricularActivitesText: data.extracurricularActivitesText
 			}
 		}, function(err, user){
 			if (err){

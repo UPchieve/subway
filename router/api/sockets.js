@@ -97,12 +97,22 @@ module.exports = function(app){
 
     socket.on('undoClick', function(data) {
       if (!data || !data.sessionId) return;
-      io.in(data.sessionId).emit('undo');
+      socket.broadcast.to(data.sessionId).emit('undo');
     });
 
     socket.on('clearClick', function(data) {
       if (!data || !data.sessionId) return;
       io.to(data.sessionId).emit('clear');
+    });
+
+    socket.on('drawing', function(data) {
+      if (!data || !data.sessionId) return;
+      socket.broadcast.to(data.sessionId).emit('draw');
+    });
+
+    socket.on('end', function(data) {
+      if (!data || !data.sessionId) return;
+      socket.broadcast.to(data.sessionId).emit('end');
     });
 
     socket.on('changeColor', function(data) {

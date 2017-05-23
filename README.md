@@ -1,6 +1,6 @@
 # UPchieve web server
 
-> Web server providing endpoints for the BelieveAchieve web client
+> Web server providing endpoints for the UPchieve web client
 
 ## Build Setup
 

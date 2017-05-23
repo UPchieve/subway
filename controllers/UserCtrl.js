@@ -19,8 +19,13 @@ module.exports = {
         hasUpdate = false;
 
     // Define and iterate through keys to add to update object
+
     [
-      'firstname', 'lastname', 'picture', 'year', 'month', 'day', 'race', 'highschool', 'subject'
+      'firstname', 'lastname', 'picture', 'birthdate', 'serviceInterests', 'gender', 'race',
+      'groupIdentification', 'computerAccess', 'preferredTimes', 'highschool', 'currentGrade',
+      'expectedGraduation', 'difficultAcademicSubject', 'difficultCollegeProcess', 'highestLevelEducation',
+      'hasGuidanceCounselor', 'gpa', 'collegeApplicationsText', 'commonCollegeDocs', 'academicInterestsText',
+      'testScoresText', 'advancedCoursesText', 'extracurricularActivitesText'
     ].forEach(function(key){
       if (data[key]){
         update[key] = data[key];
@@ -39,5 +44,5 @@ module.exports = {
         user.getProfile(callback);
       }
     });
-  },
+  }
 };
