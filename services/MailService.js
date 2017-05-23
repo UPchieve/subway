@@ -24,10 +24,6 @@ module.exports = {
       if (err) {
         console.log('SendGrid error');
         console.log(err);
-      } else {
-        console.log('Sent email via SendGrid:', res.statusCode);
-        console.log(res.body);
-        console.log(res.headers);
       }
       callback(err, res);
     });
