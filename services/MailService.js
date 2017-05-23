@@ -1,6 +1,6 @@
 var config = require('../config');
 
-var sg = require('sendgrid')(process.env.SENDGRID_API_KEY);
+var sg = require('sendgrid')(config.sendgridApiKey);
 var helper = require('sendgrid').mail;
 
 module.exports = {
