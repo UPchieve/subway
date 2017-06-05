@@ -1,6 +1,6 @@
 var config = require('../config');
 
-var transporter = require('nodemailer').createTransport(config.mail.smtpConfig);
+// var transporter = require('nodemailer').createTransport(config.mail.smtpConfig);
 
 module.exports = {
   sendVerification: function(options, callback){
