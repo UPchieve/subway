@@ -14,8 +14,8 @@ module.exports = {
 	var helper = require('sendgrid').mail
 	var from_email = new helper.Email(config.mail.senders.noreply);
 	var to_email = new helper.Email(email);
-    var subject = 'I\'m replacing the subject tag';
-	var content = new helper.Content('text/html', 'I\'m replacing the <strong>body tag</strong>');
+        var subject = '';
+	var content = new helper.Content('text/html', '');
 	var mail = new helper.Mail(from_email, subject, to_email, content);
 	mail.personalizations[0].addSubstitution(new helper.Substitution('-userEmail-', email));
 	mail.personalizations[0].addSubstitution(new helper.Substitution('-verifyLink-', url));
