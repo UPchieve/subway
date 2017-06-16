@@ -5,7 +5,15 @@ module.exports = {
 	database: 'mongodb://user:password@mongodb/database',
 	sessionSecret: process.env.SESSION_SECRET || 'PoKtSuRS2phosxZRV9XEVS9hVyMTzSyB',
 	saltRounds: 10,
-	sendgridApiKey: process.env.SENDGRID_API_KEY || '',
+	sendgrid: {
+		apiKey: process.env.SENDGRID_API_KEY || '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',
+		templateId: '142a621c-127a-46a1-b36a-d0689fd07877'
+	}, 
+	mail: {
+		senders: {
+			noreply: 'noreply@example.com'
+		}
+	},
 	client: {
 		host: 'localhost:8080'
 	},
