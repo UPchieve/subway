@@ -5,7 +5,7 @@ module.exports = function(router){
 		var userId = req.user && req.user._id;
 
 		if (!userId){
-			return res.json({err: 'Must be authenticated to send verification email'});
+			return res.json({err: 'Must be authenticated to send password reset email'});
 		}
 
 		ResetPasswordCtrl.initiateReset({

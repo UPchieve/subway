@@ -21,7 +21,7 @@ module.exports = {
     };
 
     transporter.sendMail(mailOptions, callback);
-  }
+  },
 
   sendReset: function(options, callback){
     var email = options.email,
@@ -34,12 +34,12 @@ module.exports = {
       from: config.mail.senders.noreply,
       subject: 'Did you want to reset your password?',
       text: [
-        'Click on this link to choose a new password!', url
-        'If you received this email by accident, you can just ignore it and your password will not change.',
+        'Click on this link to choose a new password!', url,
+        'If you received this email by accident, you can just ignore it and your password will not change.'
       ].join('\n\n')
     };
 
     transporter.sendMail(mailOptions, callback);
   }
-  
+
 };
