@@ -24,6 +24,7 @@ var userSchema = new mongoose.Schema({
   },
   verificationToken: String,
   registrationCode: String,
+  passwordRecoveryKey: String,
 
   // Profile data
   firstname: String,
