@@ -11,7 +11,7 @@ module.exports = {
 
     async.waterfall([
 
-      // Find the user to be verified
+      // Find the user whose password must be reset
       function(done){
         User.findById(userId, function(err, user){
           if (err){

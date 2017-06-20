@@ -188,14 +188,7 @@ module.exports = function(app){
   });
 
   router.post('/reset/send', function(req, res){
-		var userId = req.user && req.user._id;
-
-		if (!userId){
-			return res.json({err: 'Must be authenticated to send password reset email'});
-		}
-
 		ResetPasswordCtrl.initiateReset({
-			userId: userId
 		}, function(err, email){
 			if (err){
 				res.json({err: err});
