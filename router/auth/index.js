@@ -188,7 +188,9 @@ module.exports = function(app){
   });
 
   router.post('/reset/send', function(req, res){
+		var email = req.body.email;
 		ResetPasswordCtrl.initiateReset({
+      email: email
 		}, function(err, email){
 			if (err){
 				res.json({err: err});

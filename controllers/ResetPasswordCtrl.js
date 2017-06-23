@@ -7,33 +7,14 @@ var User = require('../models/User');
 
 module.exports = {
   initiateReset: function(options, callback){
-    var userId = options.userId;
+    var email = options.email;
 
     async.waterfall([
 
-      // Find the user whose password must be reset
-      function(done){
-        User.findById(userId, function(err, user){
-          if (err){
-            return done(err);
-          }
-          if (!user) {
-            return done(new Error('No account with that id found.'));
-          }
-          done(null, user);
-        });
-      },
-
-      // Generate the token and save token and user email to database
+      // Generate the token
       function(user, done){
         crypto.randomBytes(16, function(err, buf) {
           var token = buf.toString('hex');
-
-          user.passwordRecoveryKey = token;
-
-          user.save(function(err){
-            done(err, token, user.email);
-          });
         });
       },
 
