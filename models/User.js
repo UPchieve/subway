@@ -23,7 +23,7 @@ var userSchema = new mongoose.Schema({
     default: false
   },
   verificationToken: String,
-  registrationCode: String,
+  registrationToken: String,
   passwordRecoveryKey: String,
 
   // Profile data
