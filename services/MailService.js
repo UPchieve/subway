@@ -10,13 +10,13 @@ module.exports = {
 
   sendTemplatedEmail: function(mail, callback) {
   	var request = sendgrid.emptyRequest({
-	  method: 'POST',
-	  path: '/v3/mail/send',
-	  body: mail.toJSON()
-	});
+  	  method: 'POST',
+  	  path: '/v3/mail/send',
+  	  body: mail.toJSON()
+  	});
 
-	sendgrid.API(request, callback);
-  }, 
+    sendgrid.API(request, callback);
+  },
 
   sendVerification: function(options, callback){
 
@@ -25,9 +25,12 @@ module.exports = {
 
     var url = 'http://' + config.client.host + '/#/action/verify/' + token;
 
-	var from_email = new helper.Email(config.mail.senders.noreply);
-	var to_email = new helper.Email(email);
-	var mail = new helper.Mail(from_email, subject, to_email, content);
+    var fromEmail = new helper.Email(config.mail.senders.noreply),
+        toEmail = new helper.Email(email),
+        subject = '[UPchieve] Verify your email address';
+        content = new helper.Content('text/plain', options.content);
+
+	var mail = new helper.Mail(fromEmail, subject, toEmail, content);
 	mail.personalizations[0].addSubstitution(new helper.Substitution('-userEmail-', email));
 	mail.personalizations[0].addSubstitution(new helper.Substitution('-verifyLink-', url));
 	mail.setTemplateId(config.sendgrid.templateId);
