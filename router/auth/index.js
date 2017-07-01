@@ -212,6 +212,7 @@ router.post('/reset/send', function(req, res){
 router.post('/reset/confirm', function(req, res){
   var email = req.body.email,
       password = req.body.password,
+      newpassword = req.body.newpassword,
       token = req.body.token;
 
   if (!token){
@@ -221,6 +222,14 @@ router.post('/reset/confirm', function(req, res){
   } else if (!email || !password){
     return res.json({
       err: 'Must supply an email and password for password reset'
+    });
+  } else if (!newpassword){
+    return res.json({
+      err: 'Must reenter password for password reset'
+    });
+  } else if (newpassword != password){
+    return res.json({
+      err: 'Passwords do not match'
     });
   }
 
@@ -268,12 +277,18 @@ router.post('/reset/confirm', function(req, res){
       res.json({err: err});
     } else {
       user.hashPassword(password, function(err, hash){
-        user.password = hash; // Note the salt is embedded in the final hash
-        if (err){
-          res.json({
-            err: 'Could not hash password'
+        if (user.password == password) {
+          return res.json({
+            err: 'Must enter a new password'
           });
-          return;
+        } else {
+          user.password = hash; // Note the salt is embedded in the final hash
+          if (err){
+            res.json({
+              err: 'Could not hash password'
+            });
+            return;
+          }
         }
       });
       res.json({

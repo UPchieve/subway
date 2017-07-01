@@ -56,14 +56,14 @@ module.exports = {
     async.waterfall([
 
       // Find the user whose password is being reset and check if email matches
-      function(email, done){
+      function(done){
         User.findOne({passwordResetToken: token}, function(err, user){
           if (!user){
             return done(new Error('No user found with that password reset token'));
           } else if (err){
             return done(err);
           } else if (user.email != email){
-            return done(new Error('Inputted email does not match the user email'));
+            return done(new Error('Email did not match the password reset token'));
           }
           done(null, user);
         });
