@@ -27,7 +27,7 @@ module.exports = {
     var email = options.email,
         token = options.token;
 
-    var url = 'http://' + config.client.host + '/#/action/reset/' + token;
+    var url = 'http://' + config.client.host + '/#/setpassword/' + token;
 
     var mailOptions = {
       to: email,

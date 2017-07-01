@@ -11,7 +11,7 @@ module.exports = {
 
     async.waterfall([
 
-      // Find the user to be verified
+      // Find the user whose password is to be reset
       function(done){
         User.findOne({email: email}, function(err, user){
           if (err){
@@ -29,7 +29,7 @@ module.exports = {
         crypto.randomBytes(16, function(err, buf) {
           var token = buf.toString('hex');
 
-          user.registrationToken = token;
+          user.passwordResetToken = token;
 
           user.save(function(err){
             done(err, token, user.email);
@@ -44,6 +44,35 @@ module.exports = {
           token: token
         }, function(err){
           done(err, email);
+        });
+      }
+    ], callback);
+  },
+
+  finishReset: function(options, callback){
+    var email = options.email;
+    var token = options.token;
+
+    async.waterfall([
+
+      // Find the user whose password is being reset and check if email matches
+      function(email, done){
+        User.findOne({passwordResetToken: token}, function(err, user){
+          if (!user){
+            return done(new Error('No user found with that password reset token'));
+          } else if (err){
+            return done(err);
+          } else if (user.email != email){
+            return done(new Error('Inputted email does not match the user email'));
+          }
+          done(null, user);
+        });
+      },
+
+      function(user, done){
+        user.passwordResetToken = undefined;
+        user.save(function(err){
+          done(err, user);
         });
       }
     ], callback);
