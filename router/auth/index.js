@@ -274,21 +274,17 @@ router.post('/reset/confirm', function(req, res){
     email: email
   }, function(err, user){
     if (err){
-      res.json({err: err});
+      res.json({
+        err: err
+      });
     } else {
       user.hashPassword(password, function(err, hash){
-        if (user.password == password) {
-          return res.json({
-            err: 'Must enter a new password'
+        user.password = hash; // Note the salt is embedded in the final hash
+        if (err){
+          res.json({
+            err: 'Could not hash password'
           });
-        } else {
-          user.password = hash; // Note the salt is embedded in the final hash
-          if (err){
-            res.json({
-              err: 'Could not hash password'
-            });
-            return;
-          }
+          return;
         }
       });
       res.json({
