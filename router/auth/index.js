@@ -285,6 +285,13 @@ router.post('/reset/confirm', function(req, res){
             err: 'Could not hash password'
           });
           return;
+        } else {
+          console.log('hash password successful');
+          console.log(user.password);
+          res.json({
+            user: user
+          });
+          console.log('user saved as json');
         }
       });
       res.json({
