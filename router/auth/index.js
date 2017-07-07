@@ -49,8 +49,8 @@ module.exports = function(app){
 
 router.post('/register', function(req, res){
   var email = req.body.email,
-      password = req.body.password,
-      code = req.body.code;
+  password = req.body.password,
+  code = req.body.code;
 
   if (!email || !password){
     return res.json({
@@ -211,9 +211,9 @@ router.post('/reset/send', function(req, res){
 
 router.post('/reset/confirm', function(req, res){
   var email = req.body.email,
-      password = req.body.password,
-      newpassword = req.body.newpassword,
-      token = req.body.token;
+  password = req.body.password,
+  newpassword = req.body.newpassword,
+  token = req.body.token;
 
   if (!token){
     return res.json({
@@ -279,24 +279,25 @@ router.post('/reset/confirm', function(req, res){
       });
     } else {
       user.hashPassword(password, function(err, hash){
-        user.password = hash; // Note the salt is embedded in the final hash
         if (err){
           res.json({
             err: 'Could not hash password'
           });
           return;
         } else {
-          console.log('hash password successful');
-          console.log(user.password);
-          res.json({
-            user: user
+          user.password = hash; // Note the salt is embedded in the final hash
+          user.save(function(err){
+            if (err){
+              return res.json({
+                err: 'Could not save user'
+              });
+            }
+            return res.json({
+              user: user
+            });
           });
-          console.log('user saved as json');
         }
-      });
-      res.json({
-        msg: 'Password reset successful'
-      });
+      })
     }
   });
 });
