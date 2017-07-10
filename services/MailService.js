@@ -66,33 +66,6 @@ module.exports = {
     });
   },
 
-  // plain text version
-
-  sendReset: function(options, callback){
-    options = options || {};
-
-    var fromEmail = new helper.Email(options.from),
-        toEmail = new helper.Email(options.to),
-        subject = options.subject || 'New message from UPchieve',
-        content = new helper.Content('text/plain', options.content);
-
-    var mail = new helper.Mail(fromEmail, subject, toEmail, content);
-
-    var request = sg.emptyRequest({
-      method: 'POST',
-      path: '/v3/mail/send',
-      body: mail.toJSON()
-    });
-
-    sg.API(request, function(err, res) {
-      if (err) {
-        console.log('SendGrid error');
-        console.log(err);
-      }
-      callback(err, res);
-    });
-  },
-
   sendReset: function(options, callback){
     var email = options.email,
         token = options.token;
@@ -114,4 +87,5 @@ module.exports = {
 
     this.sendTemplatedEmail(mail, callback);
   }
+
 };

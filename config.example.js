@@ -3,20 +3,15 @@
 module.exports = {
 	host: process.env.SERVER_HOST || 'localhost:3000',
 	database: 'mongodb://user:password@mongodb/database',
-	sessionSecret: process.env.SESSION_SECRET || 'PoKtSuRS2phosxZRV9XEVS9hVyMTzSyB',
+	sessionSecret: process.env.SESSION_SECRET || '',
 	saltRounds: 10,
+	sendgrid: {
+		apiKey: process.env.SENDGRID_API_KEY || '',
+		templateId: '142a621c-127a-46a1-b36a-d0689fd07877'
+	},
 	mail: {
-		smtpConfig: {
-			host: '',
-			port: 465,
-			auth: {
-				user: '',
-				pass: ''
-			},
-			secure: true
-		},
 		senders: {
-			noreply: 'noreply@example.com'
+			noreply: 'noreply@upchieve.org'
 		}
 	},
 	client: {
