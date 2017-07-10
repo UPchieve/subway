@@ -69,23 +69,32 @@ module.exports = {
   sendReset: function(options, callback){
     var email = options.email,
         token = options.token;
-
-    var url = 'http://' + config.client.host + '/#/action/reset/' + token;
+    var url = 'http://' + config.client.host + '/#/setpassword/' + token;
+    var emailContent = [
+      'Click on this link to choose a new password!', url,
+      'If you received this email by accident, you can just ignore it and your password will not change.',
+    ].join('\n\n');
 
     var fromEmail = new helper.Email(config.mail.senders.noreply),
         toEmail = new helper.Email(email),
         subject = '[UPchieve] Did you want to reset your password?',
-        content = [
-          'Click on this link to choose a new password!', url,
-          'If you received this email by accident, you can just ignore it and your password will not change.',
-        ].join('\n\n');
+        content = new helper.Content('text/plain', emailContent);
 
     var mail = new helper.Mail(fromEmail, subject, toEmail, content);
-    mail.personalizations[0].addSubstitution(new helper.Substitution('-userEmail-', email));
-    mail.personalizations[0].addSubstitution(new helper.Substitution('-verifyLink-', url));
-    mail.setTemplateId(config.sendgrid.templateId);
 
-    this.sendTemplatedEmail(mail, callback);
+    var request = sendgrid.emptyRequest({
+      method: 'POST',
+      path: '/v3/mail/send',
+      body: mail.toJSON()
+    });
+
+    sendgrid.API(request, function(err, res) {
+      if (err) {
+        console.log('SendGrid error');
+        console.log(err);
+      }
+      callback(err, res);
+    });
   }
 
 };
