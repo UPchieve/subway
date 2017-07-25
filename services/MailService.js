@@ -65,8 +65,26 @@ module.exports = {
       '-userEmail-': email,
       '-verifyLink-': url
     });
-
-  	sendEmail(templatedMail, callback);
+    sendEmail(templatedMail, callback);
   },
+
+  sendReset: function(options, callback){
+    var email = options.email,
+        token = options.token;
+
+    var url = 'http://' + config.client.host + '/#/setpassword/' + token;
+
+    var emailContent = [
+      'Click on this link to choose a new password!', url,
+      'If you received this email by accident, you can just ignore it and your password will not change.',
+    ].join('\n\n');
+
+    var mail = getMailHelper({
+      to: email,
+      subject: '[UPchieve] Did you want to reset your password?',
+      content: emailContent
+    });
+    sendEmail(mail, callback);
+  }
 
 };
