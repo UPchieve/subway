@@ -14,13 +14,14 @@ module.exports = function(router){
 		});
 	});
 	router.post('/training/score', function(req, res){
-		TrainingCtrl.getQuizScore({userid: req.body.userid, idAnswerMap: req.body.idAnswerMap}, function(err, score){
+		TrainingCtrl.getQuizScore({userid: req.body.userid, idAnswerMap: req.body.idAnswerMap}, function(err, data){
 			if (err){
 				res.json({err: err});
 			} else {
 				res.json({
           msg: 'Score calculated and saved',
-          score: score
+          score: data.score,
+					idCorrectAnswerMap: data.idCorrectAnswerMap
         });
 			}
 		});

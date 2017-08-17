@@ -70,6 +70,7 @@ module.exports = {
     var score = 0;
     var answer;
     var obj_ids = Object.keys(idAnswerMap);
+    var idCorrectAnswerMap = new Object();
     Question.find({'_id': {$in: obj_ids}}, function(err, questions) {
       if (err){
         return callback(err);
@@ -77,6 +78,7 @@ module.exports = {
       else {
         questions.forEach(function(question) {
           var correctAnswer = question.correctAnswer;
+          idCorrectAnswerMap[question._id] = question.correctAnswer;
           var userAnswer = idAnswerMap[question._id];
           if (correctAnswer == userAnswer) {
             score = score + 1;
@@ -94,7 +96,10 @@ module.exports = {
             if (err){
               callback(err, null)
             } else {
-              callback(null, score)
+              callback(null, {
+                score: score,
+                idCorrectAnswerMap: idCorrectAnswerMap
+              })
             }
           });
         });
