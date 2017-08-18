@@ -67,6 +67,7 @@ module.exports = {
   getQuizScore: function(options, callback){
     var userid = options.userid;
     var idAnswerMap = options.idAnswerMap;
+    var category = options.category;
     var score = 0;
     var answer;
     var obj_ids = Object.keys(idAnswerMap);
@@ -84,6 +85,11 @@ module.exports = {
             score = score + 1;
           }
         });
+        var hasPassed = false;
+        var percent = score / questions.length;
+        if (percent >= 0.80) {
+          hasPassed = true;
+        }
         User.findOne({'_id': userid}, function(err, user){
           if (err){
             return callback(err);
@@ -91,12 +97,13 @@ module.exports = {
           if (!user) {
             return callback(new Error('No account with that id found.'));
           }
-          user.score = score;
+          user[category] = hasPassed;
           user.save(function(err, user){
             if (err){
               callback(err, null)
             } else {
               callback(null, {
+                passed: hasPassed,
                 score: score,
                 idCorrectAnswerMap: idCorrectAnswerMap
               })

@@ -54,7 +54,7 @@ var userSchema = new mongoose.Schema({
   advancedCoursesText: String,
   extracurricularActivitesText: String,
 
-  score: Number,
+  algebra: Boolean,
 
   // User status
   isVolunteer: {
