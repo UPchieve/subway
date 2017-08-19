@@ -52,10 +52,8 @@ module.exports = {
           var questions = questionsBySubcategory[subcategory];
           questions = shuffle(questions);
           // change depending on how many of each subcategory are wanted
-          for (var i = 0; i < 1; i++) {
-            var question = questions[i];
-            randomQuestions.push(question);
-          }
+          const NUM_QUESTIONS = 1;
+          randomQuestions = randomQuestions.concat(questions.slice(0, NUM_QUESTIONS));
         });
 
         randomQuestions = shuffle(randomQuestions);
