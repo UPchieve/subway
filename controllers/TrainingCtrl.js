@@ -2,6 +2,10 @@ var Question = require('../models/Question');
 var User = require('../models/User');
 var ObjectId = require('mongodb').ObjectID;
 
+// change depending on how many of each subcategory are wanted
+const NUM_QUESTIONS = 1;
+const PASS_THRESHOLD = false;
+
 // Fisher-Yates shuffle
 function shuffle(origArray) {
   var array = origArray.slice(0); // clones the array
@@ -51,8 +55,6 @@ module.exports = {
         subcategories.map(function(subcategory) {
           var questions = questionsBySubcategory[subcategory];
           questions = shuffle(questions);
-          // change depending on how many of each subcategory are wanted
-          const NUM_QUESTIONS = 1;
           randomQuestions = randomQuestions.concat(questions.slice(0, NUM_QUESTIONS));
         });
 
@@ -83,10 +85,9 @@ module.exports = {
             score = score + 1;
           }
         });
-        var hasPassed = false;
         var percent = score / questions.length;
         if (percent >= 0.80) {
-          hasPassed = true;
+          PASS_THRESHOLD = true;
         }
         User.findOne({'_id': userid}, function(err, user){
           if (err){
@@ -95,13 +96,13 @@ module.exports = {
           if (!user) {
             return callback(new Error('No account with that id found.'));
           }
-          user[category] = hasPassed;
+          user[category] = PASS_THRESHOLD;
           user.save(function(err, user){
             if (err){
               callback(err, null)
             } else {
               callback(null, {
-                passed: hasPassed,
+                passed: PASS_THRESHOLD,
                 score: score,
                 idCorrectAnswerMap: idCorrectAnswerMap
               })
