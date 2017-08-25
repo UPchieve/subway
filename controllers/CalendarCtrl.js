@@ -70,27 +70,20 @@ module.exports = {
     });
   },
   updateAvailability: function(options, callback){
-    console.log('reached controller');
     var userid = options.userid;
     var availability = options.availability;
-    console.log(availability);
     User.findOne({_id: userid}, function(err, user){
       if (err){
-        console.log(err);
         return callback(err);
       }
       if (!user) {
-        console.log(err);
         return callback(new Error('No account with that id found.'));
       }
       user.availability = availability;
-      console.log(user.availability);
       user.save(function(err, user){
         if (err){
-          console.log(err);
           callback(err, null)
         } else {
-          console.log('did not get error');
           callback(null, availability)
         }
       });

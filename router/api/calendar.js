@@ -25,14 +25,10 @@ module.exports = function(router){
 		});
   });
   router.post('/calendar/save', function(req, res){
-    console.log('reached router');
-    CalendarCtrl.getAvailability({userid: req.body.userid, availability: req.body.availability}, function(err, availability){
-      console.log('inside controller call');
+    CalendarCtrl.updateAvailability({userid: req.body.userid, availability: req.body.availability}, function(err, avail){
       if (err){
-        console.log(err);
 				res.json({err: err});
 			} else {
-        console.log('did not get error in router');
 				res.json({
           msg: 'Availability saved'
         });
