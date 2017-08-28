@@ -40,6 +40,7 @@ module.exports = {
       '3p': false, '4p': false, '5p': false, '6p': false, '7p': false,
       '8p': false, '9p': false, '10p': false, '11p': false}
     };
+    var hasSchedule = true;
     User.findOne({_id: userid}, function(err, user){
       if (err){
         return callback(err);
@@ -48,6 +49,7 @@ module.exports = {
         return callback(new Error('No account with that id found.'));
       }
       user.availability = availability;
+      user.hasSchedule = true;
       user.save(function(err, user){
         if (err){
           callback(err, null)

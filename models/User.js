@@ -90,6 +90,7 @@ var userSchema = new mongoose.Schema({
       '3p': Boolean, '4p': Boolean, '5p': Boolean, '6p': Boolean, '7p': Boolean,
       '8p': Boolean, '9p': Boolean, '10p': Boolean, '11p': Boolean}
   },
+  hasSchedule: false,
 
 
   // User status
@@ -131,6 +132,7 @@ userSchema.methods.parseProfile = function(){
     preferredTimes: this.preferredTimes,
 
     availability: this.availability,
+    hasSchedule: this.hasSchedule,
 
     highschool: this.highschool,
     currentGrade: this.currentGrade,
