@@ -20,6 +20,8 @@ module.exports = function(router){
 			} else {
 				res.json({
           msg: 'Score calculated and saved',
+					tries: data.tries,
+					passed: data.passed,
           score: data.score,
 					idCorrectAnswerMap: data.idCorrectAnswerMap
         });

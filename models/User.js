@@ -54,7 +54,14 @@ var userSchema = new mongoose.Schema({
   advancedCoursesText: String,
   extracurricularActivitesText: String,
 
-  algebra: Boolean,
+  algebra: {
+    passed: Boolean,
+    tries: Number
+  },
+  geometry: {
+    passed: Boolean,
+    tries: Number
+  },
 
   // User status
   isVolunteer: {
@@ -107,7 +114,10 @@ userSchema.methods.parseProfile = function(){
     academicInterestsText: this.academicInterestsText,
     testScoresText: this.testScoresText,
     advancedCoursesText: this.advancedCoursesText,
-    extracurricularActivitesText: this.extracurricularActivitesText
+    extracurricularActivitesText: this.extracurricularActivitesText,
+
+    algebra: this.algebra,
+    geometry: this.geometry
   };
 };
 
