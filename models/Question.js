@@ -22,7 +22,8 @@ questionSchema.methods.parseQuestion = function(){
 questionSchema.statics.getSubcategories = function(category){
   var categoryToSubcategoryMap = {
     algebra: ['linear equations', 'rational exponents and radicals', 'application of linear equations', 'two variable equations', 'rational expressions', 'complex numbers'],
-    geometry: ['congruence and similarity', 'vertices', 'angles', 'circles', 'triangles', 'rectangles']
+    geometry: ['congruence and similarity', 'vertices', 'angles', 'circles', 'triangles', 'rectangles'],
+    trigonometry: ['angles', 'triangles', 'right triangles', 'quadrants', 'radians', 'unit circle', 'inequalities']
   };
   var subcategories = categoryToSubcategoryMap[category];
   return subcategories;
