@@ -113,7 +113,7 @@
 "questionText": "If 0 < t < 2π such that sin t = √2 / 2 and cot t < 0, then t = ?",
 "possibleAnswers": [{"txt": "π / 4", "val": "a"}, {"txt": "5 π / 4", "val": "b"}, {"txt": "7 π / 4", "val": "c"}, {"txt": "3 π / 4", "val": "d"}],
 "correctAnswer": "d",
-"category": "trigonometric functions",
+"category": "trigonometry",
 "subcategory": "angles"
 },
 {

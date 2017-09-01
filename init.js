@@ -10,10 +10,10 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function(){
 	console.log('Connected to database');
   var collection = db.collection('question');
-	var jsonArr = ['./geometry.json', './algebra.json', './trigonometry.json', './esl.json'];
+	var jsonArr = ['geometry', 'algebra', 'trigonometry', 'esl', 'precalculus', 'calculus'];
 	for (var i = 0; i < jsonArr.length; i++) {
 		try {
-			var json = require(jsonArr[i]);
+			var json = require('./' + jsonArr[i] + '.json');
 			console.log(json);
 		} catch (e) {
 			console.log(e);

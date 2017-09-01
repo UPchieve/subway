@@ -70,6 +70,14 @@ var userSchema = new mongoose.Schema({
     passed: Boolean,
     tries: Number
   },
+  precalculus: {
+    passed: Boolean,
+    tries: Number
+  },
+  calculus: {
+    passed: Boolean,
+    tries: Number
+  },
 
   // User status
   isVolunteer: {
@@ -127,7 +135,9 @@ userSchema.methods.parseProfile = function(){
     algebra: this.algebra,
     geometry: this.geometry,
     trigonometry: this.trigonometry,
-    esl: this.esl
+    esl: this.esl,
+    precalculus: this.precalculus,
+    calculus: this.calculus
   };
 };
 

@@ -24,7 +24,9 @@ questionSchema.statics.getSubcategories = function(category){
     algebra: ['linear equations', 'rational exponents and radicals', 'application of linear equations', 'two variable equations', 'rational expressions', 'complex numbers'],
     geometry: ['congruence and similarity', 'vertices', 'angles', 'circles', 'triangles', 'rectangles'],
     trigonometry: ['angles', 'triangles', 'right triangles', 'quadrants', 'radians', 'unit circle', 'inequalities'],
-    esl: ['Reading', 'Writing', 'Writing - vocabulary', 'Reading & Writing', 'Speaking - conversational']
+    esl: ['Reading', 'Writing', 'Writing - vocabulary', 'Reading & Writing', 'Speaking - conversational'],
+    precalculus: ['rectangular coordinates', 'linear inequalities', 'functions', 'rational exponents', 'quadratic functions', 'logarithms and exponents'],
+    calculus: ['antiderivatives', 'derivatives', 'limits', 'critical numbers', 'functions']
   };
   var subcategories = categoryToSubcategoryMap[category];
   return subcategories;
