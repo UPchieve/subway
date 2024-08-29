@@ -101,8 +101,6 @@ tag_commit_hackers:
   release:
     tag_name: 'hackers-test1'
     description: 'Deployed from GitLab CI.'
-  rules:
-    - if: $CI_JOB_STATUS == "success"
   #needs:
     #- job: deploy_hackers
   # rules:
