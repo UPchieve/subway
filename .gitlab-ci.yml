@@ -119,9 +119,8 @@ tag_commit_hackers:
     - deployment_tag="deployed-$CI_ENVIRONMENT_NAME-$timestamp"
     - echo $deployment_tag
   release:
-    tag_name: 'deployed-$(date +%Y%m%d%H%M%S)'
+    tag_name: 'hackers-test'
     description: 'Deployed from GitLab CI.'
-  when: manual
   #needs:
     #- job: deploy_hackers
   # rules:
