@@ -121,6 +121,7 @@ tag_commit_hackers:
   release:
     tag_name: 'deployed-$(date +%Y%m%d%H%M%S)'
     description: 'Deployed from GitLab CI.'
+  when: manual
   #needs:
     #- job: deploy_hackers
   # rules:
