@@ -41,9 +41,8 @@ variables:
     - az acr login --name $AZURE_CONTAINER_REGISTRY
   script:
     - echo $IMAGE_TAG
-    # - docker build -t $IMAGE_TAG .
-    # - docker push $IMAGE_TAG
-    - exit 1
+    - docker build -t $IMAGE_TAG .
+    - docker push $IMAGE_TAG
 
 build_hackers:
   extends: .build_docker
@@ -95,7 +94,7 @@ tag_commit_hackers:
   stage: post-deploy
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   needs:
-    - job: build_hackers
+    - job: deploy_hackers
   script:
     - echo 'Tag commit $CI_COMMIT_SHA'
   release:
