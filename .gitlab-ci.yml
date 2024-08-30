@@ -90,17 +90,20 @@ deploy_hackers:
     #- if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     #  when: on_success
     - when: manual
-  
-tag_commit_hackers:
-  stage: post-deploy
-  image: registry.gitlab.com/gitlab-org/release-cli:latest
-  needs:
-    - job: deploy_hackers
-  script:
-    - echo 'Tag commit $CI_COMMIT_SHA'
   release:
-    tag_name: 'hackers-test1'
-    description: 'Deployed from GitLab CI.'
+    tag_name: 'hackers-test2'
+    description: 'test'
+  
+# tag_commit_hackers:
+#   stage: post-deploy
+#   image: registry.gitlab.com/gitlab-org/release-cli:latest
+#   needs:
+#     - job: deploy_hackers
+#   script:
+#     - echo 'Tag commit $CI_COMMIT_SHA'
+#   release:
+#     tag_name: 'hackers-test1'
+#     description: 'Deployed from GitLab CI.'
   #needs:
     #- job: deploy_hackers
   # rules:
